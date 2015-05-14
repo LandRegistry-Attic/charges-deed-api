@@ -1,5 +1,4 @@
 from flask import Flask, make_response, Response, jsonify
-import requests
 import json
 
 def register_routes(blueprint):

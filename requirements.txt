@@ -1,4 +1,2 @@
-colour-runner
-xmlrunner
 Flask
 Flask-Script
