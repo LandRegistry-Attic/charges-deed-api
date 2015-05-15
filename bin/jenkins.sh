@@ -9,11 +9,17 @@ virtualenv $env_dir
 #install requirements
 pip install -r requirements.txt
 
+#install test only requirements
+pip install -r requirements_test.txt
+
 #ensure submodules are cloned
 git submodule update --init
 
-python tests.py --xml
+coverage run --source=app tests.py --xml
 
 test_pass=$?
+
+coverage xml
+coverage -rm
 
 exit $test_pass
