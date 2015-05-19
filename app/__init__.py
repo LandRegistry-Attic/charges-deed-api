@@ -1,7 +1,7 @@
 from flask import Flask
 from flask.ext.script import Manager
 from app import helloworld
-from app import deed, borrowers, conveyancer
+from app import deed, borrowers, conveyancer, property
 
 
 def create_app():
@@ -13,5 +13,6 @@ def create_app():
     app.register_blueprint(deed.blueprint)
     app.register_blueprint(borrowers.blueprint)
     app.register_blueprint(conveyancer.blueprint)
+    app.register_blueprint(property.blueprint)
 
     return app, manager

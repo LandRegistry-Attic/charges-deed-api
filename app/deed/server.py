@@ -7,10 +7,6 @@ def register_routes(blueprint):
 
         result = {
             "deed_id" : "123456",
-            "property_addr_1" : "Flat 16 Kingman Court",
-            "property_addr_2" : "Verdant Road",
-            "property_city" : "London",
-            "property_title_no" : "GHR67832",
             "lender_name" : "Bank of England Plc",
             "lender_addr_1" : "12 Trinity Place",
             "lender_addr_2" : "Regents Street",
