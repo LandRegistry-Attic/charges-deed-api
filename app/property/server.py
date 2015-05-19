@@ -6,11 +6,10 @@ def register_routes(blueprint):
     def get_property():
 
         result = {
-            "deed_id" : "123456",
-            "property_addr_1" : "Flat 16 Kingman Court",
-            "property_addr_2" : "Verdant Road",
-            "property_city" : "London",
-            "property_title_no" : "GHR67832",
+            "property_addr_1": "Flat 16 Kingman Court",
+            "property_addr_2": "Verdant Road",
+            "property_city": "London",
+            "property_title_no": "GHR67832",
                 }
 
         return jsonify(result)

@@ -6,15 +6,10 @@ def register_routes(blueprint):
     def get_deed():
 
         result = {
-            "deed_id" : "123456",
-            "lender_name" : "Bank of England Plc",
-            "lender_addr_1" : "12 Trinity Place",
-            "lender_addr_2" : "Regents Street",
-            "lender_city" : "London",
-            "lender_company_no" : "2347676",
-            "provision_1" : "This Mortgage Deed incorporates the Lenders Mortgage Conditions and Explanation 2006, a copy of which has been received by the Borrower.",
-            "provision_2" : "The lender is under an obligation to make further advances and applies for the obligation to be entered in the register.",
-            "provision_3" : "No disposition of the registered estate by the proprietor of the registered estate is to be registered without a written consent signed by Bank of England Plc.",
+            "deed_id": "123456",
+            "provision_1": "This Mortgage Deed incorporates the Lenders Mortgage Conditions and Explanation 2006, a copy of which has been received by the Borrower.",
+            "provision_2": "The lender is under an obligation to make further advances and applies for the obligation to be entered in the register.",
+            "provision_3": "No disposition of the registered estate by the proprietor of the registered estate is to be registered without a written consent signed by Bank of England Plc.",
         }
 
         return jsonify(result)

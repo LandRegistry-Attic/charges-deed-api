@@ -6,10 +6,10 @@ def register_routes(blueprint):
     def get_conveyancer():
 
         result = {
-            "conveyancer_name" : "",
-            "conveyancer_addr_1" : "",
-            "conveyancer_addr_2" : "",
-            "conveyancer_city" : "",
+            "conveyancer_name": "",
+            "conveyancer_addr_1": "",
+            "conveyancer_addr_2": "",
+            "conveyancer_city": "",
                 }
 
         return jsonify(result)
