@@ -1,5 +1,5 @@
-from flask import Flask, make_response, Response, jsonify
-import json
+from flask import jsonify
+
 
 def register_routes(blueprint):
     @blueprint.route('/get-conveyancer', methods=['GET'])
@@ -9,7 +9,6 @@ def register_routes(blueprint):
             "conveyancer_name": "",
             "conveyancer_addr_1": "",
             "conveyancer_addr_2": "",
-            "conveyancer_city": "",
-                }
+            "conveyancer_city": "", }
 
         return jsonify(result)

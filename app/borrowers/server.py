@@ -1,5 +1,5 @@
-from flask import Flask, make_response, Response, jsonify
-import json
+from flask import jsonify
+
 
 def register_routes(blueprint):
     @blueprint.route('/get-borrower/<borrower_id>', methods=['GET'])
@@ -13,8 +13,7 @@ def register_routes(blueprint):
                 "borrower_addr_1": "Flat 16 Kingman Court",
                 "borrower_addr_2": "Verdant Road",
                 "borrower_city": "London",
-                "borrower_postcode": "SV19 9BT",
-                    }
+                "borrower_postcode": "SV19 9BT", }
 
         if int(borrower_id) == 2:
             result = {
@@ -24,6 +23,5 @@ def register_routes(blueprint):
                 "borrower_addr_1": "Flat 16 Kingman Court",
                 "borrower_addr_2": "Verdant Road",
                 "borrower_city": "London",
-                "borrower_postcode": "SV19 9BT",
-                    }
+                "borrower_postcode": "SV19 9BT", }
         return jsonify(result)
