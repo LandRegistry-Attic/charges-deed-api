@@ -1,5 +1,5 @@
-from flask import Flask, make_response, Response, jsonify
-import json
+from flask import jsonify
+
 
 def register_routes(blueprint):
     @blueprint.route('/helloworld', methods=['GET'])

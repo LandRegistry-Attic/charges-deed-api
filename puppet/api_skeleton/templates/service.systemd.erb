@@ -1,0 +1,14 @@
+[Unit]
+Description=Start the Charges API Skeleton
+
+[Service]
+PIDFile=/var/run/api_skeleton.pid
+WorkingDirectory=/opt/api_skeleton
+Environment='API_SKELETON_GUNICORN_PORT=<%=@port%>' 'API_SKELETON_GUNICORN_HOST=<%=@host%>'
+Type=simple
+ExecStart=/bin/bash -c './bin/run.sh'
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target

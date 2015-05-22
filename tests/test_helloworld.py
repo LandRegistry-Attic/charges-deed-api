@@ -1,6 +1,5 @@
 from tests.helpers import with_client, setUpApp, with_context
 import unittest
-from lxml.html import document_fromstring
 
 
 class TestHelloWorld (unittest.TestCase):

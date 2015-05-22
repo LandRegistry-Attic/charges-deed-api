@@ -1,0 +1,11 @@
+{
+  "name": "charges-api-skeleton",
+  "version": "0.0.1",
+  "author": "Land Registry Charges team",
+  "summary": "Install the Flask Api Skeleton.",
+  "license": "MIT",
+  "source": "https://github.com/LandRegistry/charges-api-skeleton",
+  "project_page": "https://github.com/LandRegistry/charges-api-skeleton",
+  "issues_url": "https://github.com/LandRegistry/charges-api-skeleton",
+  "dependencies": [{"name": "puppetlabs/vcsrepo"}]
+}
