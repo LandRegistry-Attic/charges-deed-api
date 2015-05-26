@@ -12,4 +12,4 @@ class TestViewDeed (unittest.TestCase):
     def test_get_deed(self, client):
         response = client.get('/view-deed')
         assert response.status_code == 200
-        assert '"deed_id": "123456"' in response.data.decode()
+        assert '"deed-id": "12345"' in response.data.decode()

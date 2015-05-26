@@ -2,13 +2,17 @@ from flask import jsonify
 
 
 def register_routes(blueprint):
-    @blueprint.route('/get-property', methods=['GET'])
+    @blueprint.route('/property', methods=['GET'])
     def get_property():
 
         result = {
-            "property_addr_1": "Flat 16 Kingman Court",
-            "property_addr_2": "Verdant Road",
-            "property_city": "London",
-            "property_title_no": "GHR67832", }
+            "address": {
+                "street-address": "Flat 16 Kingman Court",
+                "extended-address": "Verdant Road",
+                "locality": "London",
+                "postal-code": "",
+                },
+            "property-title-no": "GHR67832",
+            }
 
         return jsonify(result)

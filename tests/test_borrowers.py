@@ -10,6 +10,6 @@ class TestGetBorrower (unittest.TestCase):
     @with_context
     @with_client
     def test_get_borrower(self, client):
-        response = client.get('/get-borrower/1')
+        response = client.get('/borrower/1')
         assert response.status_code == 200
-        assert '"borrower_forename": "Peter"' in response.data.decode()
+        assert '"forename": "Peter"' in response.data.decode()

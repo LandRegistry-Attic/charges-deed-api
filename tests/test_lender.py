@@ -10,6 +10,6 @@ class TestGetLender (unittest.TestCase):
     @with_context
     @with_client
     def test_get_lender(self, client):
-        response = client.get('/get-lender')
+        response = client.get('/lender')
         assert response.status_code == 200
-        assert '"lender_name": "Bank of England Plc"' in response.data.decode()
+        assert '"name": "Bank of England Plc"' in response.data.decode()

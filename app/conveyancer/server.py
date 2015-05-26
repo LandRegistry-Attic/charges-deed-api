@@ -2,13 +2,17 @@ from flask import jsonify
 
 
 def register_routes(blueprint):
-    @blueprint.route('/get-conveyancer', methods=['GET'])
+    @blueprint.route('/conveyancer', methods=['GET'])
     def get_conveyancer():
 
         result = {
-            "conveyancer_name": "",
-            "conveyancer_addr_1": "",
-            "conveyancer_addr_2": "",
-            "conveyancer_city": "", }
+            "name": "",
+            "address": {
+                "street-address": "",
+                "extended-address": "",
+                "locality": "",
+                "postal-code": "",
+                },
+            }
 
         return jsonify(result)

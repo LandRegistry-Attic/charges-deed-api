@@ -10,6 +10,6 @@ class TestGetConveyancer (unittest.TestCase):
     @with_context
     @with_client
     def test_get_conveyancer(self, client):
-        response = client.get('/get-conveyancer')
+        response = client.get('/conveyancer')
         assert response.status_code == 200
-        assert '"conveyancer_name": ""' in response.data.decode()
+        assert '"name": ""' in response.data.decode()
