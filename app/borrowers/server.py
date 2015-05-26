@@ -24,7 +24,7 @@ def register_routes(blueprint):
                 "middle": "Jane",
                 "surname": "Spencer",
                 "address": {
-                    "stree-address": "Flat 16 Kingman Court",
+                    "street-address": "Flat 16 Kingman Court",
                     "extended-address": "Verdant Road",
                     "locality": "London",
                     "postal-code": "SV19 9BT",
