@@ -1,7 +1,8 @@
 from functools import wraps
 from app import create_app
 
-def with_context (test):
+
+def with_context(test):
     @wraps(test)
     def _wrapped_test(self):
         with self.app.app_context():
@@ -10,11 +11,11 @@ def with_context (test):
     return _wrapped_test
 
 
-def with_client (test):
+def with_client(test):
     @wraps(test)
     def _wrapped_test(self):
         with self.app.test_client() as client:
-            test (self,client)
+            test(self, client)
     return _wrapped_test
 
 
