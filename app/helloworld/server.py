@@ -6,7 +6,6 @@ def register_routes(blueprint):
     def get_title():
 
         result = {
-            "Hello": "World",
-        }
+            "Hello": "World", }
 
         return jsonify(result)
