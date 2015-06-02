@@ -2,13 +2,15 @@
 Description=Start the Charges API Skeleton
 
 [Service]
-PIDFile=/var/run/deed_api.pid
+PIDFile=/var/run/deed_api/deed_api.pid
 WorkingDirectory=/opt/deed_api
 Environment='DEED_API_GUNICORN_PORT=<%=@port%>' 'DEED_API_GUNICORN_HOST=<%=@host%>'
 Type=simple
 ExecStart=/bin/bash -c './bin/run.sh'
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
+User=<%=@owner%>
+Group=<%=@group%>
 
 [Install]
 WantedBy=multi-user.target

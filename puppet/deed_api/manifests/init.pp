@@ -28,6 +28,12 @@ class deed_api (
     notify  => Service['deed_api'],
   }
 
+  file { '/var/run/deed_api':
+    ensure => 'directory',
+    owner  => $owner,
+    group  => $group,
+  }
+
   file { '/etc/systemd/system/deed_api.service':
     ensure  => 'file',
     mode    => '0755',
@@ -43,7 +49,8 @@ class deed_api (
     require  => [
       Vcsrepo['/opt/deed_api'],
       File['/opt/deed_api/bin/run.sh'],
-      File['/etc/systemd/system/deed_api.service']
+      File['/etc/systemd/system/deed_api.service'],
+      File['/var/run/deed_api'],
     ],
   }
 
