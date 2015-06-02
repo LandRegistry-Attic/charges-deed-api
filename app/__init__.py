@@ -4,7 +4,7 @@ from app import helloworld
 from app import deed, borrowers, conveyancer, property, lender
 
 
-def create_app():
+def create_manager():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
 
@@ -16,4 +16,4 @@ def create_app():
     app.register_blueprint(property.blueprint)
     app.register_blueprint(lender.blueprint)
 
-    return app, manager
+    return manager

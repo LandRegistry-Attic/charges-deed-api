@@ -1,5 +1,5 @@
 from functools import wraps
-from app import create_app
+from app import create_manager
 
 
 def with_context(test):
@@ -20,7 +20,7 @@ def with_client(test):
 
 
 def setUpApp(self):
-    app, manager = create_app()
-    app.config['TESTING'] = True
-    self.app = app
+    manager = create_manager()
+    self.app = manager.app
     self.manager = manager
+    self.app.config['TESTING'] = True
