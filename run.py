@@ -1,6 +1,6 @@
-from app import create_app
+from app import create_manager
 
-app, manager = create_app()
+manager = create_manager()
 
 if __name__ == '__main__':
     manager.run()
