@@ -6,47 +6,65 @@ def register_routes(blueprint):
     def get(md_ref):
         if int(md_ref) == 1:
             return jsonify({
-                "deed-id": "12345",
-                "borrowers": [{
-                    "forename": "Peter",
-                    "middle": "",
-                    "surname": "Smith",
-                    "address": {
-                        "street-address": "Flat 16 Kingman Court",
-                        "extended-address": "Verdant Road",
-                        "locality": "London",
-                        "postal-code": "SV19 9BT",
-                    },
-                }, {
-                    "forename": "Sarah",
-                    "middle": "Jane",
-                    "surname": "Spencer",
-                    "address": {
-                        "street-address": "Flat 16 Kingman Court",
-                        "extended-address": "Verdant Road",
-                        "locality": "London",
-                        "postal-code": "SV19 9BT",
-                    },
-                }],
-                "property": {
-                    "address": {
-                        "street-address": "Flat 16 Kingman Court",
-                        "extended-address": "Verdant Road",
-                        "locality": "London",
-                        "postal-code": "",
-                    },
-                    "property-title-no": "GHR67832",
-                },
-                "lender": {
-                    "name": "Bank of England Plc",
-                    "address": {
-                        "street-address": "12 Trinity Place",
-                        "extended-address": "Regents Street",
-                        "locality": "London",
-                        "postal-code": "",
-                    },
-                    "company-no": "2347676",
-                }})
+                "deed": {
+                    "operative-deed": {
+                            "mdref": "1",
+                            "title": {
+                                "title-number": "GHR67832",
+                                "description": "",
+                                "address": {
+                                    "street-address": "Flat 16 Kingman Court",
+                                    "extended-address": "Verdant Road",
+                                    "locality": "London",
+                                    "postal-code": "",
+                                },
+                            },
+                            "lender": {
+                                    "name": "Bank of England Plc",
+                                    "address": {
+                                        "street-address": "12 Trinity Place",
+                                        "extended-address": "Regents Street",
+                                        "locality": "London",
+                                        "postal-code": "2347676",
+                                        },
+                                    "company-number": "",
+                                    },
+                            "borrowers": [
+                                {
+                                "borrower-id": "1",
+                                "name": "Peter Smith",
+                                "address": {
+                                    "street-address": "Flat 16 Kingman Court",
+                                    "extended-address": "Verdant Road",
+                                    "locality": "London",
+                                    "postal-code": "SV19 9BT",
+                                        },
+                                    },
+                                    {
+                                        "borrower-id": "2",
+                                        "name": "Sarah Jane Smith",
+                                        "address": {
+                                            "street-address": "Flat 16 Kingman Court",
+                                            "extended-address": "Verdant Road",
+                                            "locality": "London",
+                                            "postal-code": "SV19 9BT",
+                                                    },
+                                    },
+                                ],
+                                "charging-clause": "",
+                                "provisions": [],
+			                    "restrictions": [],
+			                    "effective-clause": "",
+		                },
+                        "signatures": [],
+		                "effective-date": "",
+	                },
+	                "registrars-signature": {
+		                  "name":"",
+		                  "date": "",
+		                  "signature":"",
+	                },
+                })
         else:
             abort(404)
 
