@@ -83,7 +83,7 @@ class deed_api (
     notify  => Service['nginx'],
   }
 
-  postgresql::server::db { 'charges':
+  postgresql::server::db { 'deed_api':
     user     => $owner,
     password => postgresql_password($owner, 'dapassword'),
   }
