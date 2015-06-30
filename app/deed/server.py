@@ -2,10 +2,11 @@ from flask import jsonify, abort, request
 
 
 def register_routes(blueprint):
-    @blueprint.route('/deed/<md_ref>', methods=['GET'])
-    def get(md_ref):
-        if int(md_ref) == 1:
+    @blueprint.route('/deed/<id_>', methods=['GET'])
+    def get(id_):
+        if int(id_) == 1:
             return jsonify({
+                "id": "1",
                 "deed": {
                     "operative-deed": {
                             "mdref": "1",
@@ -74,7 +75,7 @@ def register_routes(blueprint):
         print("Deed " + str(request.get_json()) + " created!")
         return jsonify()
 
-    @blueprint.route('/deed/<md_ref>', methods=['DELETE'])
-    def delete(md_ref):
-        print("Deed " + md_ref + " deleted!")
+    @blueprint.route('/deed/<id_>', methods=['DELETE'])
+    def delete(id_):
+        print("Deed " + id_ + " deleted!")
         return jsonify()
