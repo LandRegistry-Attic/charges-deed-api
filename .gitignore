@@ -10,3 +10,4 @@ test-reports/
 *.lock
 .librarian
 .tmp
+.idea/
