@@ -1,0 +1,10 @@
+AllCops:
+  Exclude:
+    - 'Gemfile'
+    - 'Gemfile.lock'
+
+Metrics/MethodLength:
+  Enabled: false
+
+Style/GlobalVars:
+  Enabled: false
