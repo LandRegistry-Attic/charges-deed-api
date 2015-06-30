@@ -1,6 +1,6 @@
 server {
   listen 80;
-  server_name deed.*;
+  server_name <%= @domain %>;
 
   location / {
     proxy_set_header X-Forwarded-Host $host;
