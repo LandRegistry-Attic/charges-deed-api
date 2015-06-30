@@ -14,17 +14,6 @@ class TestDeedModel (unittest.TestCase):
         tearDownDB(self)
 
     @with_context
-    def test_get_all(self):
-        deed_id = DeedHelper._create_deed_db()
-        deed = Deed.get(deed_id)
-
-        self.assertIn(deed, Deed.all())
-
-        DeedHelper._delete_deed(deed_id)
-
-        self.assertNotIn(deed, Deed.all())
-
-    @with_context
     def test_get(self):
         deed_id = DeedHelper._create_deed_db()
         deed = Deed.get(deed_id)
