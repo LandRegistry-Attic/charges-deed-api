@@ -3,8 +3,6 @@ from app import create_manager
 from app.db import db
 
 
-database_URI = 'sqlite://'
-
 def with_context(test):
     @wraps(test)
     def _wrapped_test(self):
@@ -29,7 +27,6 @@ def setUpApp(self):
     self.app = manager.app
     self.manager = manager
     self.app.config['TESTING'] = True
-    self.app.config["SQLALCHEMY_DATABASE_URI"] = database_URI
 
 
 def setUpDB(self):

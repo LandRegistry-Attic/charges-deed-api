@@ -7,6 +7,7 @@ migrate = Migrate(db)
 
 json_type = JSON
 
+
 def init(app, manager):
     db.init_app(app)
     migrate.init_app(app, db, 'app/db/migrations')
