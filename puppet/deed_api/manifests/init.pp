@@ -1,6 +1,5 @@
 # Install and configure the Flask Api Skeleton
 class deed_api (
-<<<<<<< HEAD
     $port = '9012',
     $host = '0.0.0.0',
     $source = 'git://github.com/LandRegistry/charges-deed-api',
@@ -8,13 +7,6 @@ class deed_api (
     $domain = 'api.*',
     $owner = 'vagrant',
     $group = 'vagrant'
-=======
-  $port = '9012',
-  $host = '0.0.0.0',
-  $branch_or_revision = 'master',
-  $owner = 'vagrant',
-  $group = 'vagrant'
->>>>>>> db for deed api
 ) {
   require ::standard_env
   require ::postgresql::server
@@ -59,18 +51,11 @@ class deed_api (
     enable   => true,
     provider => 'systemd',
     require  => [
-<<<<<<< HEAD
       Vcsrepo["/opt/${module_name}"],
       File["/opt/${module_name}/bin/run.sh"],
       File["/etc/systemd/system/${module_name}.service"],
       File["/var/run/${module_name}"],
-=======
-      Vcsrepo['/opt/deed_api'],
-      File['/opt/deed_api/bin/run.sh'],
-      File['/etc/systemd/system/deed_api.service'],
-      File['/var/run/deed_api'],
-      Postgresql::Server::Db['charges'],
->>>>>>> db for deed api
+      Postgresql::Server::Db[$module_name],
     ],
   }
 
@@ -83,7 +68,7 @@ class deed_api (
     notify  => Service['nginx'],
   }
 
-  postgresql::server::db { 'deed_api':
+  postgresql::server::db { $module_name:
     user     => $owner,
     password => postgresql_password($owner, 'dapassword'),
   }
