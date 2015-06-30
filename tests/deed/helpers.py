@@ -1,6 +1,7 @@
 from random import randint
 from app.deed.model import Deed
 
+
 class DeedHelper:
     _id = randint(1, 999999)
     _json_doc = {

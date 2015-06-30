@@ -30,4 +30,3 @@ class Deed(db.Model):
         db.session.commit()
 
         return deed
-
