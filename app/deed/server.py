@@ -24,8 +24,17 @@ def register_routes(blueprint):
                 "title": deed_json['title'],
                 "lender": deed_json['lender'],
                 "borrowers": deed_json['borrowers'],
-                "charging-clause": "const",
-                "effective-clause": "const",
+                "charging-clause": "You, the borrower, with full title "
+                                   "guarantee, charge property to the "
+                                   "lender by way of legal mortgage with "
+                                   "the payment of all money secured by this"
+                                   " charge.",
+                "effective-clause": "This charge takes effect when the "
+                                    "registrar receives notification from "
+                                    "Bailey & Co Solicitors, who prepared "
+                                    "this charge. The effective date and time "
+                                    "is applied by the registrar on "
+                                    "completion.",
                 "restrictions": [],
                 "provisions": []
             }}
