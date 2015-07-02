@@ -4,7 +4,7 @@ class deed_api (
     $host = '0.0.0.0',
     $source = 'git://github.com/LandRegistry/charges-deed-api',
     $branch_or_revision = 'master',
-    $domain = 'api.*',
+    $domain = 'deedapi.*',
     $owner = 'vagrant',
     $group = 'vagrant'
 ) {
