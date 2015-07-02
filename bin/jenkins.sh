@@ -19,7 +19,7 @@ git submodule update --init
 
 rubocop=$?
 
-coverage run --source=app tests.py --xml
+DEED_DATABASE_URI='postgres:///deed-api' coverage run --source=app tests.py --xml
 
 test_pass=$?
 
