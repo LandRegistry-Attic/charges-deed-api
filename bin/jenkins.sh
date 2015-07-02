@@ -15,7 +15,7 @@ pip install -r requirements_test.txt
 #ensure submodules are cloned
 git submodule update --init
 
-coverage run --source=app tests.py --xml
+DEED_DATABASE_URI='postgres:///deed-api' coverage run --source=app tests.py --xml
 
 test_pass=$?
 
