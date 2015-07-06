@@ -37,7 +37,13 @@ def register_routes(blueprint):
                                     "completion.",
                 "restrictions": [],
                 "provisions": deed_json['provisions']
-            }}
+            },
+            "registrars-signature": {
+                "name": "",
+                "date": "",
+                "signature": "",
+            }
+        }
         deed.json_doc = json_doc
         try:
             deed.save()
@@ -57,3 +63,12 @@ def register_routes(blueprint):
             abort(404)
         else:
             return jsonify(id=id_), status.HTTP_200_OK
+
+    @blueprint.route('/deed/<deed_id>/<borrower_id>/match', methods=['GET'])
+    def matches(deed_id, borrower_id):
+        try:
+            result = Deed.matches(deed_id, borrower_id)
+        except Exception as inst:
+            print(str(type(inst)) + ":" + str(inst))
+
+        return jsonify(matches=result), status.HTTP_200_OK

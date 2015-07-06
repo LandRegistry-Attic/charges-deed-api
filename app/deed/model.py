@@ -30,3 +30,10 @@ class Deed(db.Model):
         db.session.commit()
 
         return deed
+
+    @staticmethod
+    def matches(deed_id, borrower_id):
+        result = db.engine.execute("Select count(json_doc) from deed where id = 12 and ")
+        for row in result:
+            print(row)
+        return True
