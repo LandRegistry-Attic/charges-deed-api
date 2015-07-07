@@ -87,12 +87,3 @@ def register_routes(blueprint):
                 raise exceptions.NotAcceptable()
         else:
             abort(403)
-
-    @blueprint.route('/deed/<deed_id>/<borrower_id>/match', methods=['GET'])
-    def matches(deed_id, borrower_id):
-        try:
-            result = Deed.matches(deed_id, borrower_id)
-        except Exception as inst:
-            print(str(type(inst)) + ":" + str(inst))
-
-        return jsonify(matches=result), status.HTTP_200_OK
