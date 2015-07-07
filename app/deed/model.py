@@ -11,10 +11,6 @@ class Deed(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update(self):
-        db.session.update(self)
-        db.session.commit()
-
     @staticmethod
     def all():
         return Deed.query.all()
