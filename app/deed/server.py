@@ -51,7 +51,7 @@ def register_routes(blueprint):
         try:
             deed = Deed.delete(id_)
         except Exception as inst:
-            print(type(inst) + ":" + inst)
+            print(str(type(inst)) + ":" + str(inst))
 
         if deed is None:
             abort(404)
