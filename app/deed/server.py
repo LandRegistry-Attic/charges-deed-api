@@ -1,6 +1,6 @@
+import copy
 from flask import request, jsonify, abort
 from flask.ext.api import exceptions, status
-
 from app.deed.model import Deed
 
 
@@ -36,7 +36,8 @@ def register_routes(blueprint):
                                     "is applied by the registrar on "
                                     "completion.",
                 "restrictions": [],
-                "provisions": deed_json['provisions']
+                "provisions": deed_json['provisions'],
+                "signatures": []
             },
             "registrars-signature": {
                 "name": "",
@@ -63,6 +64,29 @@ def register_routes(blueprint):
             abort(404)
         else:
             return jsonify(id=id_), status.HTTP_200_OK
+
+    @blueprint.route('/deed/<deed_id>/<borrower_id>/signature',
+                     methods=['POST'])
+    def sign(deed_id, borrower_id):
+        def sign_allowed():
+            return Deed.matches(deed_id, borrower_id)
+
+        if sign_allowed():
+            signature = request.get_json()['signature']
+            deed = Deed.get(deed_id)
+            deed_json = copy.deepcopy(deed.json_doc)
+            signatures = deed_json['operative-deed']['signatures']
+            signatures.append(signature)
+
+            try:
+                deed.json_doc = deed_json
+                deed.save()
+                return jsonify(signature=signature), status.HTTP_200_OK
+            except Exception as inst:
+                print(str(type(inst)) + ":" + str(inst))
+                raise exceptions.NotAcceptable()
+        else:
+            abort(403)
 
     @blueprint.route('/deed/<deed_id>/<borrower_id>/match', methods=['GET'])
     def matches(deed_id, borrower_id):

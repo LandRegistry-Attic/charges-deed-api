@@ -11,6 +11,10 @@ class Deed(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def update(self):
+        db.session.update(self)
+        db.session.commit()
+
     @staticmethod
     def all():
         return Deed.query.all()
@@ -33,7 +37,7 @@ class Deed(db.Model):
 
     @staticmethod
     def matches(deed_id, borrower_id):
-        result = db.engine.execute("Select count(json_doc) from deed where id = 12 and ")
-        for row in result:
-            print(row)
-        return True
+        # result = db.engine.execute("Select count(json_doc) from deed where id = 12 and ")
+        # for row in result:
+        #     print(row)
+        return deed_id == borrower_id
