@@ -10,7 +10,7 @@ def register_routes(blueprint):
         deed = Deed.get(id_)
 
         if deed is None:
-            abort(404)
+            abort(status.HTTP_404_NOT_FOUND)
         else:
             return jsonify(id=deed.id, deed=deed.json_doc), status.HTTP_200_OK
 
@@ -47,10 +47,10 @@ def register_routes(blueprint):
         deed.json_doc = json_doc
         try:
             deed.save()
-            return jsonify({"id": deed.id}), status.HTTP_200_OK
+            return jsonify(id=deed.id), status.HTTP_200_OK
         except Exception as inst:
             print(str(type(inst)) + ":" + str(inst))
-            raise exceptions.NotAcceptable()
+            abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @blueprint.route('/deed/<id_>', methods=['DELETE'])
     def delete(id_):
@@ -60,7 +60,7 @@ def register_routes(blueprint):
             print(str(type(inst)) + ":" + str(inst))
 
         if deed is None:
-            abort(404)
+            abort(status.HTTP_404_NOT_FOUND)
         else:
             return jsonify(id=id_), status.HTTP_200_OK
 
@@ -71,10 +71,10 @@ def register_routes(blueprint):
             return Deed.matches(deed_id, borrower_id)
 
         if sign_allowed():
-            signature = request.get_json()['signature']
             deed = Deed.get(deed_id)
             deed_json = copy.deepcopy(deed.json_doc)
             signatures = deed_json['operative-deed']['signatures']
+            signature = request.get_json()['signature']
             signatures.append(signature)
 
             try:
@@ -83,6 +83,6 @@ def register_routes(blueprint):
                 return jsonify(signature=signature), status.HTTP_200_OK
             except Exception as inst:
                 print(str(type(inst)) + ":" + str(inst))
-                raise exceptions.NotAcceptable()
+                raise exceptions.APIException()
         else:
-            abort(403)
+            abort(status.HTTP_403_FORBIDDEN)
