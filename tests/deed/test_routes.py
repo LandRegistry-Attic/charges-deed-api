@@ -13,8 +13,8 @@ class TestDeedRoutes(unittest.TestCase):
         setUpApp(self)
         setUpDB(self)
 
-    def tearDown(self):
-        tearDownDB(self)
+    # def tearDown(self):
+    #     tearDownDB(self)
 
     @with_context
     @with_client
@@ -49,3 +49,20 @@ class TestDeedRoutes(unittest.TestCase):
         response = client.get('/deed/{}'.format(deed_id))
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @with_context
+    @with_client
+    def test_sign_route(self, client):
+        deed_id = DeedHelper._create_deed_db()
+
+        response = client.get('/deed/{}'.format(deed_id))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        signature = "@#$%%^&"
+        borrower_id = deed_id
+        response = client.post('/deed/{}/{}/signature'.format(deed_id, borrower_id),
+                               data={"signature": signature})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(str(signature) in response.data.decode())
