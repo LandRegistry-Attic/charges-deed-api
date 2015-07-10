@@ -74,7 +74,7 @@ def register_routes(blueprint):
             deed = Deed.get(deed_id)
             deed_json = copy.deepcopy(deed.json_doc)
             signatures = deed_json['operative-deed']['signatures']
-            signature = request.get_json()['signature']
+            signature = request.form['signature']
             signatures.append(signature)
 
             try:

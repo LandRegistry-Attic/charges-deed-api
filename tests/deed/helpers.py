@@ -23,6 +23,7 @@ class DeedHelper:
             'restrictions': [
 
             ],
+            "signatures": [],
             'effective-clause': 'const',
             'lender': {
                 'name': 'Bank Test',
