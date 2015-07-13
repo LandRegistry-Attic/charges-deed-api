@@ -13,13 +13,13 @@ down_revision = None
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.dialects.postgresql import JSONB
 
 
 def upgrade():
     op.create_table('deed',
                     sa.Column('id', sa.Integer(), nullable=False),
-                    sa.Column('json_doc', JSON, nullable=False),
+                    sa.Column('json_doc', JSONB, nullable=False),
                     sa.PrimaryKeyConstraint('id'))
 
 
