@@ -36,7 +36,7 @@ def register_routes(blueprint):
                                     "is applied by the registrar on "
                                     "completion.",
                 "restrictions": [],
-                "provisions": [],
+                "provisions": deed_json['provisions'],
                 "signatures": []
             },
             "registrars-signature": {
