@@ -1,3 +1,8 @@
+Given(/^I have created the following deed:$/) do |deed_json|
+  @@deed_id = create_deed_data(deed_json)
+  @@TEST_DEEDS.push(@@deed_id)
+end
+
 Given(%r{^I visit \/([A-Za-z0-9\_\-]+)$}) do |url|
   response = Net::HTTP.get_response(URI("#{Env.domain}/#{url}"))
   @json = MultiJson.load(response.body)
