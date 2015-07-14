@@ -5,10 +5,20 @@
 ### authentication for the app before running the tests.                     ###
 ################################################################################
 
-### Code that should be executed before the acceptance tests have run.
+### Code that is executed before acceptance tests for each feature have run
 Before do
 end
 
-### Code that should be executed once all of the acceptance tests have run.
+### Code that is executed after acceptance tests for each feature have run
 After do
+end
+
+### Code that is executed after all of the acceptance tests have run
+After('@US65') do
+  ### Delete any deed data that has been created
+  puts 'Deleting deed test data...'
+  binding.pry
+  @@TEST_DEEDS.each do |deed_id|
+    delete_deed_data(deed_id)
+  end
 end
