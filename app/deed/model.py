@@ -38,15 +38,15 @@ class Deed(db.Model):
 
         sql = text("select "
                    "count(*) as count "
-                   "from "
-                   "(select "
-                   "json_array_elements(json_doc -> 'operative-deed' -> "
+                   "from (select "
+                   "jsonb_array_elements(json_doc -> 'operative-deed' -> "
                    "'borrowers') "
-                   "as borrower from deed where deed_id = :deed_id) "
+                   "as borrower from deed where id = :deed_id) "
                    "as borrowers "
                    "where borrower ->> 'id' = :borrower_id")
 
         result = conn.execute(sql, deed_id=deed_id, borrower_id=borrower_id) \
             .fetchall()
 
-        return deed_id == borrower_id
+        for row in result:
+            return int(row['count']) > 0
