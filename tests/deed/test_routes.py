@@ -66,3 +66,19 @@ class TestDeedRoutes(unittest.TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(str(signature) in response.data.decode())
+
+    @with_context
+    @with_client
+    def test_sign_route_forbidden(self, client):
+        deed_id = DeedHelper._create_deed_db()
+
+        response = client.get('/deed/{}'.format(deed_id))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        signature = "@#$%%^&"
+        response = client.post('/deed/{}/{}/signature'
+                               .format(deed_id, "10"),
+                               data={"signature": signature})
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
