@@ -1,6 +1,6 @@
 from flask import Flask
 from flask.ext.script import Manager
-from app import helloworld
+from app import helloworld, db
 from app import deed, borrowers, conveyancer, property, lender
 
 
@@ -15,5 +15,7 @@ def create_manager():
     app.register_blueprint(conveyancer.blueprint)
     app.register_blueprint(property.blueprint)
     app.register_blueprint(lender.blueprint)
+
+    db.init(app, manager)
 
     return manager

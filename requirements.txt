@@ -1,4 +1,10 @@
 Flask
 Flask-Script
 flake8
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-API
 gunicorn
+alembic
+psycopg2
+python-dateutil

@@ -4,7 +4,7 @@ class deed_api (
     $host = '0.0.0.0',
     $source = 'git://github.com/LandRegistry/charges-deed-api',
     $branch_or_revision = 'master',
-    $domain = 'api.*',
+    $domain = 'deedapi.*',
     $owner = 'vagrant',
     $group = 'vagrant'
 ) {
@@ -53,6 +53,7 @@ class deed_api (
       File["/opt/${module_name}/bin/run.sh"],
       File["/etc/systemd/system/${module_name}.service"],
       File["/var/run/${module_name}"],
+      Standard_env::Db::Postgres[$module_name],
     ],
   }
 
@@ -65,4 +66,8 @@ class deed_api (
     notify  => Service['nginx'],
   }
 
+  standard_env::db::postgres { $module_name:
+    user     => $owner,
+    password => $owner,
+  }
 }
