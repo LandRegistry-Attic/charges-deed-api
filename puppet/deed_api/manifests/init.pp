@@ -9,8 +9,6 @@ class deed_api (
     $group = 'vagrant'
 ) {
   require ::standard_env
-  require ::postgresql::server
-  require ::postgresql::lib::devel
 
   vcsrepo { "/opt/${module_name}":
     ensure   => latest,
@@ -55,7 +53,7 @@ class deed_api (
       File["/opt/${module_name}/bin/run.sh"],
       File["/etc/systemd/system/${module_name}.service"],
       File["/var/run/${module_name}"],
-      Postgresql::Server::Db[$module_name],
+      Standard_env::Db::Postgres[$module_name],
     ],
   }
 
@@ -68,8 +66,8 @@ class deed_api (
     notify  => Service['nginx'],
   }
 
-  postgresql::server::db { $module_name:
+  standard_env::db::postgres { $module_name:
     user     => $owner,
-    password => postgresql_password($owner, 'dapassword'),
+    password => $owner,
   }
 }
