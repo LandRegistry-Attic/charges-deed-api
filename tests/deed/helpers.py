@@ -11,6 +11,7 @@ class DeedHelper:
             ],
             'borrowers': [
                 {
+                    'id': "1",
                     'name': 'John Smith',
                     'address': {
                         'street-address': 'test street',

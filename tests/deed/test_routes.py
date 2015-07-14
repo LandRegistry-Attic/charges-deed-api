@@ -13,8 +13,8 @@ class TestDeedRoutes(unittest.TestCase):
         setUpApp(self)
         setUpDB(self)
 
-    # def tearDown(self):
-    #     tearDownDB(self)
+    def tearDown(self):
+        tearDownDB(self)
 
     @with_context
     @with_client
@@ -60,8 +60,8 @@ class TestDeedRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         signature = "@#$%%^&"
-        borrower_id = deed_id
-        response = client.post('/deed/{}/{}/signature'.format(deed_id, borrower_id),
+        response = client.post('/deed/{}/{}/signature'
+                               .format(deed_id, "1"),
                                data={"signature": signature})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

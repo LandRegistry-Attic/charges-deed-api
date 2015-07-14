@@ -1,6 +1,6 @@
 import copy
 from flask import request, jsonify, abort
-from flask.ext.api import exceptions, status
+from flask.ext.api import status
 from app.deed.model import Deed
 
 
@@ -36,15 +36,8 @@ def register_routes(blueprint):
                                     "is applied by the registrar on "
                                     "completion.",
                 "restrictions": [],
-                "provisions": deed_json['provisions'],
-                "signatures": []
-            },
-            "registrars-signature": {
-                "name": "",
-                "date": "",
-                "signature": "",
-            }
-        }
+                "provisions": deed_json['provisions']
+            }}
         deed.json_doc = json_doc
         try:
             deed.save()
@@ -84,6 +77,6 @@ def register_routes(blueprint):
                 return jsonify(signature=signature), status.HTTP_200_OK
             except Exception as inst:
                 print(str(type(inst)) + ":" + str(inst))
-                raise exceptions.APIException()
+                abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             abort(status.HTTP_403_FORBIDDEN)
