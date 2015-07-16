@@ -14,5 +14,3 @@ class Env
     (ENV['DOMAIN'] || 'http://0.0.0.0:9012')
   end
 end
-
-@@TEST_DEEDS = []
