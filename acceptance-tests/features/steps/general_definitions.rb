@@ -12,3 +12,11 @@ Then(
 ) do |key, value|
   assert_match(value, @json[key], "Couldnt find #{value} in #{@json}")
 end
+
+When(/^I get the created deed from the api$/) do
+  @deed = get_deed_data(@deed_id)
+end
+
+Then(/^the api response contains a token for each borrower$/) do
+  pending # Write code here that turns the phrase above into concrete actions
+end
