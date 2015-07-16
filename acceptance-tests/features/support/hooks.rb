@@ -10,7 +10,7 @@ Before do
 end
 
 ### Code that is executed after acceptance tests for each feature have run
-After do |scenario|
+After do
   ### If deed test data has been created  for this scenario then delete it
   if @deed_id
     puts "Deleting test deed #{@deed_id}..."
