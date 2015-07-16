@@ -10,15 +10,10 @@ Before do
 end
 
 ### Code that is executed after acceptance tests for each feature have run
-After do
-end
-
-### Code that is executed after all of the acceptance tests have run
-After('@US65') do
-  ### Delete any deed data that has been created
-  puts 'Deleting deed test data...'
-  binding.pry
-  @@TEST_DEEDS.each do |deed_id|
-    delete_deed_data(deed_id)
+After do |scenario|
+  ### If deed test data has been created  for this scenario then delete it
+  if @deed_id
+    puts "Deleting test deed #{@deed_id}..."
+    delete_deed_data(@deed_id)
   end
 end
