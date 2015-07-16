@@ -18,5 +18,7 @@ When(/^I get the created deed from the api$/) do
 end
 
 Then(/^the api response contains a token for each borrower$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  @deed['deed']['operative-deed']['borrowers'].each do |borrower|
+    assert(borrower['token'], "Error: Token doesn't exist for borrower #{borrower['id']}")
+  end
 end
