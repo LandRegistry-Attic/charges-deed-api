@@ -2,7 +2,6 @@ def create_deed_data(deed_json)
   deed_json = JSON.parse(deed_json)
   response = HTTP.post(Env.domain + '/deed/', json: deed_json)
   if response.code == 200
-    binding.pry
     JSON.parse(response.body)['id']
   else
     fail "Error: Couldn't create deed #{deed_json}, "\

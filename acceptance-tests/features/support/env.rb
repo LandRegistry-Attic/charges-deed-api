@@ -14,5 +14,3 @@ class Env
     (ENV['DOMAIN'] || 'http://deedapi.dev.service.gov.uk')
   end
 end
-
-@@TEST_DEEDS = []
