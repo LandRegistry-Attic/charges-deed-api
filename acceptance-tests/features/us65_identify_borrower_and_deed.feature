@@ -8,7 +8,6 @@ Feature: Identify Borrowers and Their Deed
 Scenario: Tokens Generated on Deed Creation
 
     - deed api should create tokens when deed is created
-    - each borrower has a unique id
 
     Given I have created the following deed:
     """
@@ -61,4 +60,3 @@ Scenario: Tokens Generated on Deed Creation
     """
     When I get the created deed from the api
     Then the api response contains a token for each borrower
-    And each borrower token should be unique
