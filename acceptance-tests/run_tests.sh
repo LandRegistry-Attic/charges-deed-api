@@ -26,5 +26,5 @@ if [ -z "$1"]
   BUNDLE_GEMFILE=$gemfile bundle exec cucumber $currentLocation --tags ~@wip
 else
   ### If arguments are supplied when running this script then execute th tests tagged with argument specified
-  BUNDLE_GEMFILE=$gemfile bundle exec cucumber $currentLocation $1
+  BUNDLE_GEMFILE=$gemfile bundle exec cucumber $currentLocation $@
 fi
