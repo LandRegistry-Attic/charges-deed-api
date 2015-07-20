@@ -35,7 +35,8 @@ def register_routes(blueprint):
                                     "this charge. The effective date and time "
                                     "is applied by the registrar on "
                                     "completion.",
-                "restrictions": [],
+                "signatures": [],
+                "restrictions": deed_json['restrictions'],
                 "provisions": deed_json['provisions']
             }}
         deed.json_doc = json_doc
