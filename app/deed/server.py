@@ -1,6 +1,6 @@
+import copy
 from flask import request, jsonify, abort
-from flask.ext.api import exceptions, status
-
+from flask.ext.api import status
 from app.deed.model import Deed
 
 
@@ -10,7 +10,7 @@ def register_routes(blueprint):
         deed = Deed.get(id_)
 
         if deed is None:
-            abort(404)
+            abort(status.HTTP_404_NOT_FOUND)
         else:
             return jsonify(id=deed.id, deed=deed.json_doc), status.HTTP_200_OK
 
@@ -35,16 +35,17 @@ def register_routes(blueprint):
                                     "this charge. The effective date and time "
                                     "is applied by the registrar on "
                                     "completion.",
-                "restrictions": [],
+                "signatures": [],
+                "restrictions": deed_json['restrictions'],
                 "provisions": deed_json['provisions']
             }}
         deed.json_doc = json_doc
         try:
             deed.save()
-            return jsonify({"id": deed.id}), status.HTTP_200_OK
+            return jsonify(id=deed.id), status.HTTP_200_OK
         except Exception as inst:
             print(str(type(inst)) + ":" + str(inst))
-            raise exceptions.NotAcceptable()
+            abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @blueprint.route('/deed/<id_>', methods=['DELETE'])
     def delete(id_):
@@ -54,6 +55,29 @@ def register_routes(blueprint):
             print(str(type(inst)) + ":" + str(inst))
 
         if deed is None:
-            abort(404)
+            abort(status.HTTP_404_NOT_FOUND)
         else:
             return jsonify(id=id_), status.HTTP_200_OK
+
+    @blueprint.route('/deed/<deed_id>/<borrower_id>/signature',
+                     methods=['POST'])
+    def sign(deed_id, borrower_id):
+        def sign_allowed():
+            return Deed.matches(deed_id, borrower_id)
+
+        if sign_allowed():
+            deed = Deed.get(deed_id)
+            deed_json = copy.deepcopy(deed.json_doc)
+            signatures = deed_json['operative-deed']['signatures']
+            signature = request.form['signature']
+            signatures.append(signature)
+
+            try:
+                deed.json_doc = deed_json
+                deed.save()
+                return jsonify(signature=signature), status.HTTP_200_OK
+            except Exception as inst:
+                print(str(type(inst)) + ":" + str(inst))
+                abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            abort(status.HTTP_403_FORBIDDEN)

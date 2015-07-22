@@ -11,6 +11,7 @@ class DeedHelper:
             ],
             'borrowers': [
                 {
+                    'id': "1",
                     'name': 'John Smith',
                     'address': {
                         'street-address': 'test street',
@@ -23,6 +24,7 @@ class DeedHelper:
             'restrictions': [
 
             ],
+            "signatures": [],
             'effective-clause': 'const',
             'lender': {
                 'name': 'Bank Test',
