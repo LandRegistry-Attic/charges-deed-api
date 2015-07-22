@@ -19,9 +19,9 @@ git submodule update --init
 
 rubocop=$?
 
-DEED_DATABASE_URI=postgres:///deed-api python run.py db upgrade head
+DEED_DATABASE_URI=postgres:///deed_api python run.py db upgrade head
 
-DEED_DATABASE_URI=postgres:///deed-api coverage run --source=app tests.py --xml
+DEED_DATABASE_URI=postgres:///deed_api coverage run --source=app tests.py --xml
 
 test_pass=$?
 
