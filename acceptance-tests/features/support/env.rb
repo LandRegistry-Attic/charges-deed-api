@@ -11,6 +11,6 @@
 #   Env.domain
 class Env
   def self.domain
-    (ENV['DOMAIN'] || 'http://localhost:5000')
+    (ENV['DOMAIN'] || 'http://deedapi.dev.service.gov.uk')
   end
 end

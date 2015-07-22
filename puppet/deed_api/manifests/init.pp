@@ -4,7 +4,8 @@ class deed_api (
     $host = '0.0.0.0',
     $source = 'git://github.com/LandRegistry/charges-deed-api',
     $branch_or_revision = 'master',
-    $domain = 'deedapi.*',
+    $subdomain = 'deedapi',
+    $domain = undef,
     $owner = 'vagrant',
     $group = 'vagrant'
 ) {
@@ -69,5 +70,9 @@ class deed_api (
   standard_env::db::postgres { $module_name:
     user     => $owner,
     password => $owner,
+  }
+
+  if $environment == 'development' {
+    standard_env::dev_host { $subdomain: }
   }
 }
