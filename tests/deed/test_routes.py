@@ -60,7 +60,7 @@ class TestDeedRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         signature = "@#$%%^&"
-        response = client.post('/deed/{}/{}/signature'
+        response = client.post('/deed/{}/{}/signature/'
                                .format(deed_id, "1"),
                                data={"signature": signature})
 
@@ -77,7 +77,7 @@ class TestDeedRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         signature = "@#$%%^&"
-        response = client.post('/deed/{}/{}/signature'
+        response = client.post('/deed/{}/{}/signature/'
                                .format(deed_id, "10"),
                                data={"signature": signature})
 
