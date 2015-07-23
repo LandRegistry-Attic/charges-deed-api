@@ -59,7 +59,7 @@ def register_routes(blueprint):
         else:
             return jsonify(id=id_), status.HTTP_200_OK
 
-    @blueprint.route('/deed/<deed_id>/<borrower_id>/signature',
+    @blueprint.route('/deed/<deed_id>/<borrower_id>/signature/',
                      methods=['POST'])
     def sign(deed_id, borrower_id):
         def sign_allowed():
