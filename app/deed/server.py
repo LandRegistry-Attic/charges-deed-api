@@ -82,7 +82,7 @@ def register_routes(blueprint, case_api):
             sign_deed(deed, signature)
 
             if deed.all_borrowers_signed():
-                case_api.update_status(deed_id, 'Signed')
+                case_api.update_status(deed_id, 'Deed signed')
         else:
             abort(status.HTTP_403_FORBIDDEN)
 
