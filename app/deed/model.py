@@ -1,5 +1,7 @@
 from app.db import db, json_type
 from sqlalchemy.sql import text
+import string
+import random
 
 
 class Deed(db.Model):
@@ -19,6 +21,33 @@ class Deed(db.Model):
     @staticmethod
     def get(id_):
         return Deed.query.filter_by(id=id_).first()
+
+    @staticmethod
+    def get_deed_by_token(token_):
+        conn = db.session.connection()
+
+        sql = text("SELECT * "
+                   "FROM deed AS the_deed "
+                   "WHERE :token in "
+                   "(SELECT jsonb_array_elements("
+                   "json_doc -> 'operative-deed' -> 'borrowers') ->> 'token' "
+                   "FROM deed WHERE id = the_deed.id)")
+
+        result = conn.execute(sql, token=token_) \
+            .fetchall()
+
+        if len(result) > 1:
+            raise ValueError(
+                'Tokens should be unique however several deeds were found')
+
+        if len(result) == 0:
+            return None
+
+        deed = Deed()
+        deed.id = result[0]['id']
+        deed.json_doc = result[0]['json_doc']
+
+        return deed
 
     @staticmethod
     def delete(id_):
@@ -50,3 +79,9 @@ class Deed(db.Model):
 
         for row in result:
             return int(row['count']) > 0
+
+    @staticmethod
+    def generate_token():
+        size = 6
+        return ''.join(random.choice(string.ascii_uppercase + string.digits)
+                       for _ in range(size))

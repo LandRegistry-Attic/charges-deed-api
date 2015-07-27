@@ -15,17 +15,33 @@ class TestDeedModel (unittest.TestCase):
 
     @with_context
     def test_get(self):
-        deed_id = DeedHelper._create_deed_db()
-        deed = Deed.get(deed_id)
+        base_deed = DeedHelper._create_deed_db()
+        deed = Deed.get(base_deed.id)
 
-        self.assertEqual(deed.id, deed_id)
+        self.assertEqual(deed.id, base_deed.id)
 
-        DeedHelper._delete_deed(deed_id)
+        DeedHelper._delete_deed(base_deed.id)
+
+    @with_context
+    def test_get_deed_by_token(self):
+        base_deed = DeedHelper._create_deed_db()
+
+        base_deed_token = \
+            base_deed.json_doc["operative-deed"]["borrowers"][0]["token"]
+
+        retrieved_deed_from_token = Deed.get_deed_by_token(base_deed_token)
+
+        self.assertEqual(base_deed.id,
+                         retrieved_deed_from_token.id)
+        self.assertEqual(base_deed.json_doc,
+                         retrieved_deed_from_token.json_doc)
+
+        DeedHelper._delete_deed(base_deed.id)
 
     @with_context
     def test_delete(self):
-        deed_id = DeedHelper._create_deed_db()
-        deed = Deed.get(deed_id)
+        base_deed = DeedHelper._create_deed_db()
+        deed = Deed.get(base_deed.id)
 
         self.assertEqual(deed.id, DeedHelper._id)
 

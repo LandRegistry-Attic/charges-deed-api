@@ -5,49 +5,43 @@ from app.deed.model import Deed
 class DeedHelper:
     _id = randint(1, 999999)
     _json_doc = {
-        'operative-deed': {
-            'provisions': [
-
-            ],
-            'borrowers': [
-                {
-                    'id': "1",
-                    'name': 'John Smith',
-                    'address': {
-                        'street-address': 'test street',
-                        'postal-code': 'RG1 1DP',
-                        'locality': 'London',
-                        'extended-address': 'test-extended address'
-                    }
+        "provisions": [],
+        "borrowers": [
+            {
+                "id": "1",
+                "name": "John Smith",
+                "address": {
+                    "street-address": "test street",
+                    "postal-code": "RG1 1DP",
+                    "locality": "London",
+                    "extended-address": "test-extended address"
                 }
-            ],
-            'restrictions': [
-
-            ],
-            "signatures": [],
-            'effective-clause': 'const',
-            'lender': {
-                'name': 'Bank Test',
-                'address': {
-                    'street-address': 'test street',
-                    'postal-code': 'RG1 1DP',
-                    'locality': 'London',
-                    'extended-address': 'test-extended address'
-                },
-                'company-number': '1233123ADF'
+            }
+        ],
+        "restrictions": [],
+        "signatures": [],
+        "effective-clause": "const",
+        "lender": {
+            "name": "Bank Test",
+            "address": {
+                "street-address": "test street",
+                "postal-code": "RG1 1DP",
+                "locality": "London",
+                "extended-address": "test-extended address"
             },
-            'title': {
-                'address': {
-                    'street-address': 'test street',
-                    'postal-code': 'RG1 1DP',
-                    'locality': 'London',
-                    'extended-address': 'test-extended address'
-                },
-                'title-number': '123ABC'
+            "company-number": "1233123ADF"
+        },
+        "title": {
+            "address": {
+                "street-address": "test street",
+                "postal-code": "RG1 1DP",
+                "locality": "London",
+                "extended-address": "test-extended address"
             },
-            'charging-clause': 'const',
-            'mdref': 2
-        }
+            "title-number": "123ABC"
+        },
+        "charging-clause": "const",
+        "mdref": 2
     }
 
     @staticmethod
@@ -56,11 +50,18 @@ class DeedHelper:
 
         deed = Deed()
         deed.id = DeedHelper._id
-        deed.json_doc = DeedHelper._json_doc
+
+        new_jdoc = DeedHelper._json_doc
+
+        new_jdoc["borrowers"][0]["token"] = Deed.generate_token()
+
+        new_jdoc = {"operative-deed": new_jdoc}
+
+        deed.json_doc = new_jdoc
 
         deed.save()
 
-        return deed.id
+        return deed
 
     @staticmethod
     def _create_deed():
