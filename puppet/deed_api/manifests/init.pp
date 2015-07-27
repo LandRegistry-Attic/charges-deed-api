@@ -8,7 +8,7 @@ class deed_api (
     $domain = undef,
     $owner = 'vagrant',
     $group = 'vagrant',
-    $case_api_address = 'http://caseapi.dev.service.gov.uk'
+    $case_api_address = 'http://case-api.dev.service.gov.uk'
 ) {
   require ::standard_env
 
