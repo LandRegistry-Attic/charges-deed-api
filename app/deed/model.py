@@ -1,5 +1,6 @@
 from app.db import db, json_type
 from sqlalchemy.sql import text
+import uuid
 
 
 class Deed(db.Model):
@@ -19,6 +20,33 @@ class Deed(db.Model):
     @staticmethod
     def get(id_):
         return Deed.query.filter_by(id=id_).first()
+
+    @staticmethod
+    def get_deed_by_token(token_):
+        conn = db.session.connection()
+
+        sql = text("SELECT * "
+                   "FROM deed AS the_deed "
+                   "WHERE :token in "
+                   "(SELECT jsonb_array_elements("
+                   "json_doc -> 'operative-deed' -> 'borrowers') ->> 'token' "
+                   "FROM deed WHERE id = the_deed.id)")
+
+        result = conn.execute(sql, token=token_) \
+            .fetchall()
+
+        if len(result) > 1:
+            raise ValueError(
+                'Tokens should be unique however several deeds were found')
+
+        if len(result) == 0:
+            return None
+
+        deed = Deed()
+        deed.id = result[0]['id']
+        deed.json_doc = result[0]['json_doc']
+
+        return deed
 
     @staticmethod
     def delete(id_):
@@ -57,3 +85,7 @@ class Deed(db.Model):
         signature_len = len(operative_deed['signatures'])
 
         return borrowers_length == signature_len
+
+    @staticmethod
+    def generate_token():
+        return str(uuid.uuid4().hex[:6]).lower()

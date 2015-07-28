@@ -14,10 +14,23 @@ def register_routes(blueprint, case_api):
         else:
             return jsonify(id=deed.id, deed=deed.json_doc), status.HTTP_200_OK
 
+    @blueprint.route('/deed/borrower/<token_>', methods=['GET'])
+    def get_with_token(token_):
+        deed = Deed.get_deed_by_token(token_)
+
+        if deed is None:
+            abort(status.HTTP_404_NOT_FOUND)
+        else:
+            return jsonify(id=deed.id, deed=deed.json_doc), status.HTTP_200_OK
+
     @blueprint.route('/deed/', methods=['POST'])
     def create():
         deed = Deed()
         deed_json = request.get_json()
+
+        for borrower in deed_json['borrowers']:
+            borrower["token"] = Deed.generate_token()
+
         json_doc = {
             "operative-deed": {
                 "mdref": deed_json['mdref'],

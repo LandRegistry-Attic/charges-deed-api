@@ -5,10 +5,15 @@
 ### authentication for the app before running the tests.                     ###
 ################################################################################
 
-### Code that should be executed before the acceptance tests have run.
+### Code that is executed before acceptance tests for each feature have run
 Before do
 end
 
-### Code that should be executed once all of the acceptance tests have run.
+### Code that is executed after acceptance tests for each feature have run
 After do
+  ### If deed test data has been created  for this scenario then delete it
+  if @deed_id
+    puts "Deleting test deed #{@deed_id}..."
+    delete_deed_data(@deed_id)
+  end
 end
