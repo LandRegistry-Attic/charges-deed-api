@@ -4,7 +4,7 @@ from flask.ext.api import status
 from app.deed.model import Deed
 
 
-def register_routes(blueprint):
+def register_routes(blueprint, case_api):
     @blueprint.route('/deed/<id_>', methods=['GET'])
     def get(id_):
         deed = Deed.get(id_)
@@ -65,19 +65,25 @@ def register_routes(blueprint):
         def sign_allowed():
             return Deed.matches(deed_id, borrower_id)
 
-        if sign_allowed():
-            deed = Deed.get(deed_id)
-            deed_json = copy.deepcopy(deed.json_doc)
+        def sign_deed(deed_, signature_):
+            deed_json = copy.deepcopy(deed_.json_doc)
             signatures = deed_json['operative-deed']['signatures']
-            signature = request.form['signature']
-            signatures.append(signature)
-
+            signatures.append(signature_)
             try:
-                deed.json_doc = deed_json
-                deed.save()
-                return jsonify(signature=signature), status.HTTP_200_OK
+                deed_.json_doc = deed_json
+                deed_.save()
             except Exception as inst:
                 print(str(type(inst)) + ":" + str(inst))
                 abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        if sign_allowed():
+            deed = Deed.get(deed_id)
+            signature = request.form['signature']
+            sign_deed(deed, signature)
+
+            if deed.all_borrowers_signed():
+                case_api.update_status(deed_id, 'Deed signed')
         else:
             abort(status.HTTP_403_FORBIDDEN)
+
+        return jsonify(signature=signature), status.HTTP_200_OK

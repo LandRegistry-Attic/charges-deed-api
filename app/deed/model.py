@@ -50,3 +50,10 @@ class Deed(db.Model):
 
         for row in result:
             return int(row['count']) > 0
+
+    def all_borrowers_signed(self):
+        operative_deed = self.json_doc['operative-deed']
+        borrowers_length = len(operative_deed['borrowers'])
+        signature_len = len(operative_deed['signatures'])
+
+        return borrowers_length == signature_len

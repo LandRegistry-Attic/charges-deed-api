@@ -67,6 +67,8 @@ class TestDeedRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(str(signature) in response.data.decode())
 
+        DeedHelper._delete_deed(deed_id)
+
     @with_context
     @with_client
     def test_sign_route_forbidden(self, client):
@@ -82,3 +84,5 @@ class TestDeedRoutes(unittest.TestCase):
                                data={"signature": signature})
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        DeedHelper._delete_deed(deed_id)

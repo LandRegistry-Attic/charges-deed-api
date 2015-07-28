@@ -8,3 +8,4 @@ gunicorn
 alembic
 psycopg2
 python-dateutil
+requests
