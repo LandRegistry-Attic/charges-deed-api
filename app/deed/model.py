@@ -1,7 +1,6 @@
 from app.db import db, json_type
 from sqlalchemy.sql import text
-import string
-import random
+import uuid
 
 
 class Deed(db.Model):
@@ -89,6 +88,4 @@ class Deed(db.Model):
 
     @staticmethod
     def generate_token():
-        size = 6
-        return ''.join(random.choice(string.ascii_uppercase + string.digits)
-                       for _ in range(size))
+        return str(uuid.uuid4().hex[:6]).lower()
