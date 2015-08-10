@@ -76,12 +76,6 @@ def register_routes(blueprint, case_api):
     @blueprint.route('/deed/<deed_id>/<borrower_id>/signature/',
                      methods=['POST'])
     def sign(deed_id, borrower_id):
-        def find_deed():
-            deed_ = Deed.get(deed_id)
-            if deed_ is None:
-                abort(status.HTTP_404_NOT_FOUND)
-            return deed_
-
         def sign_allowed():
             return Deed.matches(deed_id, borrower_id) and not \
                 Deed.registrars_signature_exists(deed_id)
@@ -97,7 +91,9 @@ def register_routes(blueprint, case_api):
                 print(str(type(inst)) + ":" + str(inst))
                 abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        deed = find_deed()
+        deed = Deed.get(deed_id)
+        if deed is None:
+            abort(status.HTTP_404_NOT_FOUND)
         if sign_allowed():
             signature = request.form['signature']
             sign_deed(deed, signature)
@@ -111,12 +107,6 @@ def register_routes(blueprint, case_api):
 
     @blueprint.route('/deed/<deed_id>/completion', methods=['POST'])
     def confirm_completion(deed_id):
-        def find_deed():
-            deed_ = Deed.get(deed_id)
-            if deed_ is None:
-                abort(status.HTTP_404_NOT_FOUND)
-            return deed_
-
         def update_case_status():
             response = case_api.update_status(deed.id, "Completion confirmed")
             if response.status_code != status.HTTP_200_OK:
@@ -134,7 +124,9 @@ def register_routes(blueprint, case_api):
                 print(str(type(exc)) + ":" + str(exc))
                 abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        deed = find_deed()
+        deed = Deed.get(deed_id)
+        if deed is None:
+            abort(status.HTTP_404_NOT_FOUND)
         if not Deed.registrars_signature_exists(deed.id):
             registrars_signature = request.data['registrars-signature']
 
