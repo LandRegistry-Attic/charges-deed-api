@@ -29,11 +29,15 @@ def register_routes(blueprint, case_api):
 
         return {'names': deed_names}, status.HTTP_200_OK
 
-    @blueprint.route('/deed/<id_>/not_signed/name', methods=['GET'])
-    def get_names_not_signed(id_):
+    @blueprint.route('/deed/<id_>/signed_status', methods=['GET'])
+    def get__signed_status(id_):
+        all_signed = Deed.get(id_).all_borrowers_signed()
         deed_names = Deed.names_of_all_borrowers_not_signed(id_)
 
-        return {'names': deed_names}, status.HTTP_200_OK
+        return {
+            'all_signed': all_signed,
+            'names': deed_names
+        }, status.HTTP_200_OK
 
     @blueprint.route('/deed/', methods=['POST'])
     def create():
