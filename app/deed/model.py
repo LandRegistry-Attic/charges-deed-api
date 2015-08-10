@@ -62,7 +62,7 @@ class Deed(db.Model):
         return deed
 
     @staticmethod
-    def matches(deed_id, borrower_id):
+    def borrower_on(deed_id, borrower_id):
         conn = db.session.connection()
 
         sql = text("select "
@@ -79,6 +79,58 @@ class Deed(db.Model):
 
         for row in result:
             return int(row['count']) > 0
+
+    @staticmethod
+    def borrower_has_signed(deed_id, borrower_id):
+        conn = db.session.connection()
+
+        sql = text("select count(signatures) as count "
+                   "from (select "
+                   "jsonb_array_elements(json_doc -> "
+                   "'operative-deed' -> 'signatures') as signature "
+                   "from deed where id = :deed_id) "
+                   "as signatures "
+                   "where signature ->> 'borrower_id' = :borrower_id ")
+
+        result = conn.execute(sql, deed_id=deed_id, borrower_id=borrower_id) \
+            .fetchall()
+
+        for row in result:
+            return int(row['count']) > 0
+
+    @staticmethod
+    def names_of_all_borrowers_signed(deed_id):
+        conn = db.session.connection()
+
+        sql = text("select jsonb_array_elements(json_doc -> "
+                   "'operative-deed' -> 'signatures') "
+                   "->> 'borrower_name' as borrower_name "
+                   "from deed where id = :deed_id")
+
+        result = conn.execute(sql, deed_id=deed_id) \
+            .fetchall()
+        borrower_names = list(map(lambda borrower_name: str(borrower_name[0]), result))
+        return borrower_names
+
+    @staticmethod
+    def names_of_all_borrowers_not_signed(deed_id):
+        conn = db.session.connection()
+
+        sql = text("select jsonb_array_elements(borrowers) ->> 'name'"
+                   "from (select jsonb_array_elements(json_doc -> "
+                   "'operative-deed' -> 'borrowers') "
+                   "from deed where id = :deed_id) as borrowers "
+                   "where jsonb_array_elements(borrowers) "
+                   "->> 'id' not in (select "
+                   "jsonb_array_elements(json_doc -> "
+                   "'operative-deed' -> 'signatures') ->> "
+                   "'borrower_id' from deed where id = :deed_id) ")
+
+        result = conn.execute(sql, deed_id=deed_id) \
+            .fetchall()
+
+        borrower_names = list(map(lambda borrower_name: str(borrower_name[0]), result))
+        return borrower_names
 
     def all_borrowers_signed(self):
         operative_deed = self.json_doc['operative-deed']

@@ -23,6 +23,18 @@ def register_routes(blueprint, case_api):
         else:
             return {'id': deed.id, 'deed': deed.json_doc}, status.HTTP_200_OK
 
+    @blueprint.route('/deed/<id_>/signed/name', methods=['GET'])
+    def get_names_signed(id_):
+        deed_names = Deed.names_of_all_borrowers_signed(id_)
+
+        return {'names': deed_names}, status.HTTP_200_OK
+
+    @blueprint.route('/deed/<id_>/not_signed/name', methods=['GET'])
+    def get_names_not_signed(id_):
+        deed_names = Deed.names_of_all_borrowers_not_signed(id_)
+
+        return {'names': deed_names}, status.HTTP_200_OK
+
     @blueprint.route('/deed/', methods=['POST'])
     def create():
         deed = Deed()
@@ -75,14 +87,22 @@ def register_routes(blueprint, case_api):
     @blueprint.route('/deed/<deed_id>/<borrower_id>/signature/',
                      methods=['POST'])
     def sign(deed_id, borrower_id):
-        def sign_allowed():
-            return Deed.matches(deed_id, borrower_id) and not \
-                Deed.registrars_signature_exists(deed_id)
 
         def sign_deed(deed_, signature_):
             deed_json = deed.get_json_doc()
             signatures = deed_json['operative-deed']['signatures']
-            signatures.append(signature_)
+
+            borrower_name = list(
+                filter(lambda borrower:
+                       borrower["id"] == borrower_id,
+                       deed_json['operative-deed']["borrowers"]))[0]["name"]
+
+            user_signature = {
+                "borrower_id": borrower_id,
+                "borrower_name": borrower_name,
+                "signature": signature_
+            }
+            signatures.append(user_signature)
             try:
                 deed_.json_doc = deed_json
                 deed_.save()
@@ -93,8 +113,11 @@ def register_routes(blueprint, case_api):
         deed = Deed.get(deed_id)
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
-        if sign_allowed():
-            signature = request.data['signature']
+
+        if Deed.borrower_on(deed_id, borrower_id) and \
+                not Deed.borrower_has_signed(deed_id, borrower_id):
+
+            signature = request.form['signature']
             sign_deed(deed, signature)
 
             if deed.all_borrowers_signed():
