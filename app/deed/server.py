@@ -76,8 +76,15 @@ def register_routes(blueprint, case_api):
     @blueprint.route('/deed/<deed_id>/<borrower_id>/signature/',
                      methods=['POST'])
     def sign(deed_id, borrower_id):
+        def find_deed():
+            deed_ = Deed.get(deed_id)
+            if deed_ is None:
+                abort(status.HTTP_404_NOT_FOUND)
+            return deed_
+
         def sign_allowed():
-            return Deed.matches(deed_id, borrower_id)
+            return Deed.matches(deed_id, borrower_id) and not \
+                Deed.registrars_signature_exists(deed_id)
 
         def sign_deed(deed_, signature_):
             deed_json = copy.deepcopy(deed_.json_doc)
@@ -90,8 +97,8 @@ def register_routes(blueprint, case_api):
                 print(str(type(inst)) + ":" + str(inst))
                 abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        deed = find_deed()
         if sign_allowed():
-            deed = Deed.get(deed_id)
             signature = request.form['signature']
             sign_deed(deed, signature)
 
