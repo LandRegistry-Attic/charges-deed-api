@@ -109,7 +109,11 @@ class Deed(db.Model):
 
         result = conn.execute(sql, deed_id=deed_id) \
             .fetchall()
-        borrower_names = list(map(lambda borrower_name: str(borrower_name[0]), result))
+
+        def borrower_name(arr):
+            return str(arr[0])
+
+        borrower_names = list(map(borrower_name, result))
         return borrower_names
 
     @staticmethod
@@ -129,7 +133,10 @@ class Deed(db.Model):
         result = conn.execute(sql, deed_id=deed_id) \
             .fetchall()
 
-        borrower_names = list(map(lambda borrower_name: str(borrower_name[0]), result))
+        def borrower_name(arr):
+            return str(arr[0])
+
+        borrower_names = list(map(borrower_name, result))
         return borrower_names
 
     def all_borrowers_signed(self):
