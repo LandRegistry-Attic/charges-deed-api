@@ -87,5 +87,12 @@ class Deed(db.Model):
         return borrowers_length == signature_len
 
     @staticmethod
+    def registrars_signature_exists(deed_id):
+        deed = Deed.query.filter_by(id=deed_id).first()
+        operative_deed_dct = deed.json_doc['operative-deed']
+
+        return 'registrars-signature' in operative_deed_dct
+
+    @staticmethod
     def generate_token():
         return str(uuid.uuid4().hex[:6]).lower()

@@ -92,13 +92,10 @@ class TestDeedRoutes(unittest.TestCase):
     @with_client
     def test_create_generates_token(self, client):
         headers = {'content-type': 'application/json'}
-
-        response = client.post('/deed/',
-                               data=json.dumps(DeedHelper._json_doc),
+        response = client.post('/deed/', data=json.dumps(DeedHelper._json_doc),
                                headers=headers)
 
-        result = json.loads(response.data)
-
+        result = json.loads(response.data.decode())
         get_response = client.get('/deed/{}'.format(result['id']))
 
         self.assertTrue("token" in get_response.data.decode())
@@ -117,3 +114,37 @@ class TestDeedRoutes(unittest.TestCase):
         self.assertTrue(str(token) in response.data.decode())
 
         DeedHelper._delete_deed(deed.id)
+
+    @with_context
+    @with_client
+    def test_confirm_completion(self, client):
+        deed = DeedHelper._create_deed_db()
+
+        signature = 'SIGNATURE'
+        registrars_signature = {
+            "registrars-signature": signature
+        }
+        response = client.post('/deed/{}/completion'.format(deed.id),
+                               data=registrars_signature)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        get_response = client.get('/deed/{}'.format(deed.id))
+
+        deed_json = get_response.data.decode()
+        self.assertIn('"registrars-signature": "{}"'.format(signature),
+                      deed_json)
+
+        DeedHelper._delete_deed(deed.id)
+
+    @with_context
+    @with_client
+    def test_confirm_completion_deed_not_found(self, client):
+        signature = 'SIGNATURE'
+        registrars_signature = {
+            "registrars-signature": signature
+        }
+        response = client.post('/deed/{}/completion'.format(1234),
+                               data=registrars_signature)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
