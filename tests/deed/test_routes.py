@@ -148,3 +148,41 @@ class TestDeedRoutes(unittest.TestCase):
                                data=registrars_signature)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @with_context
+    @with_client
+    def test_get_names_signed(self, client):
+        deed = DeedHelper._create_deed_db()
+
+        response = client.get('/deed/{}/signed/name'.format(deed.id))
+        resp_json = json.loads(response.data)
+
+        self.assertEquals([], resp_json['names'])
+
+        deed.sign_deed(1, "I'm John Smith!")
+        deed.save()
+
+        response = client.get('/deed/{}/signed/name'.format(deed.id))
+        resp_json = json.loads(response.data)
+
+        self.assertEquals(['John Smith'], resp_json['names'])
+
+    @with_context
+    @with_client
+    def test_get__signed_status(self, client):
+        deed = DeedHelper._create_deed_db()
+
+        response = client.get('/deed/{}/signed_status'.format(deed.id))
+        resp_json = json.loads(response.data)
+
+        self.assertEquals(['John Smith'], resp_json['names'])
+        self.assertFalse(resp_json['all_signed'])
+
+        deed.sign_deed(1, "I'm John Smith!")
+        deed.save()
+
+        response = client.get('/deed/{}/signed_status'.format(deed.id))
+        resp_json = json.loads(response.data)
+
+        self.assertEquals([], resp_json['names'])
+        self.assertTrue(resp_json['all_signed'])
