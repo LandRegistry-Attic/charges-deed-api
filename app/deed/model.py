@@ -92,8 +92,9 @@ class Deed(db.Model):
                    "as signatures "
                    "where signature ->> 'borrower_id' = :borrower_id ")
 
-        result = conn.execute(sql, deed_id=deed_id, borrower_id=borrower_id) \
-            .fetchall()
+        result = conn.execute(sql,
+                              deed_id=deed_id,
+                              borrower_id=str(borrower_id)).fetchall()
 
         for row in result:
             return int(row['count']) > 0
@@ -166,7 +167,7 @@ class Deed(db.Model):
 
         borrower_name = list(
             filter(lambda borrower:
-                   borrower["id"] == borrower_id,
+                   borrower["id"] == str(borrower_id),
                    deed_json['operative-deed']["borrowers"]))[0]["name"]
 
         user_signature = {
