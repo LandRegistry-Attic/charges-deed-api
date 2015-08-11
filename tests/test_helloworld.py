@@ -1,5 +1,4 @@
 from tests.helpers import with_client, setUpApp, with_context
-from flask import json
 import unittest
 
 
