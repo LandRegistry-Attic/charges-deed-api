@@ -1,7 +1,7 @@
-import copy
-from flask import request, jsonify, abort
+from flask import request, abort
 from flask.ext.api import status
 from app.deed.model import Deed
+from datetime import datetime
 
 
 def register_routes(blueprint, case_api):
@@ -12,7 +12,7 @@ def register_routes(blueprint, case_api):
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
         else:
-            return jsonify(id=deed.id, deed=deed.json_doc), status.HTTP_200_OK
+            return {'id': deed.id, 'deed': deed.json_doc}, status.HTTP_200_OK
 
     @blueprint.route('/deed/borrower/<token_>', methods=['GET'])
     def get_with_token(token_):
@@ -21,7 +21,7 @@ def register_routes(blueprint, case_api):
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
         else:
-            return jsonify(id=deed.id, deed=deed.json_doc), status.HTTP_200_OK
+            return {'id': deed.id, 'deed': deed.json_doc}, status.HTTP_200_OK
 
     @blueprint.route('/deed/', methods=['POST'])
     def create():
@@ -55,7 +55,7 @@ def register_routes(blueprint, case_api):
         deed.json_doc = json_doc
         try:
             deed.save()
-            return jsonify(id=deed.id), status.HTTP_200_OK
+            return {'id': deed.id}, status.HTTP_200_OK
         except Exception as inst:
             print(str(type(inst)) + ":" + str(inst))
             abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -70,16 +70,17 @@ def register_routes(blueprint, case_api):
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
         else:
-            return jsonify(id=id_), status.HTTP_200_OK
+            return {'id': id_}, status.HTTP_200_OK
 
     @blueprint.route('/deed/<deed_id>/<borrower_id>/signature/',
                      methods=['POST'])
     def sign(deed_id, borrower_id):
         def sign_allowed():
-            return Deed.matches(deed_id, borrower_id)
+            return Deed.matches(deed_id, borrower_id) and not \
+                Deed.registrars_signature_exists(deed_id)
 
         def sign_deed(deed_, signature_):
-            deed_json = copy.deepcopy(deed_.json_doc)
+            deed_json = deed.get_json_doc()
             signatures = deed_json['operative-deed']['signatures']
             signatures.append(signature_)
             try:
@@ -89,9 +90,11 @@ def register_routes(blueprint, case_api):
                 print(str(type(inst)) + ":" + str(inst))
                 abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        deed = Deed.get(deed_id)
+        if deed is None:
+            abort(status.HTTP_404_NOT_FOUND)
         if sign_allowed():
-            deed = Deed.get(deed_id)
-            signature = request.form['signature']
+            signature = request.data['signature']
             sign_deed(deed, signature)
 
             if deed.all_borrowers_signed():
@@ -99,4 +102,36 @@ def register_routes(blueprint, case_api):
         else:
             abort(status.HTTP_403_FORBIDDEN)
 
-        return jsonify(signature=signature), status.HTTP_200_OK
+        return {'signature': signature}, status.HTTP_200_OK
+
+    @blueprint.route('/deed/<deed_id>/completion', methods=['POST'])
+    def confirm_completion(deed_id):
+        def update_case_status():
+            response = case_api.update_status(deed.id, "Completion confirmed")
+            if response.status_code != status.HTTP_200_OK:
+                abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        def update_deed():
+            try:
+                deed_json = deed.get_json_doc()
+                operative_deed = deed_json['operative-deed']
+                operative_deed['registrars-signature'] = registrars_signature
+                operative_deed['date-effective'] = str(datetime.now())
+                deed.json_doc = deed_json
+                deed.save()
+            except Exception as exc:
+                print(str(type(exc)) + ":" + str(exc))
+                abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        deed = Deed.get(deed_id)
+        if deed is None:
+            abort(status.HTTP_404_NOT_FOUND)
+        if not Deed.registrars_signature_exists(deed.id):
+            registrars_signature = request.data['registrars-signature']
+
+            update_deed()
+            update_case_status()
+
+            return {'status_code': status.HTTP_200_OK}
+        else:
+            abort(status.HTTP_403_FORBIDDEN)

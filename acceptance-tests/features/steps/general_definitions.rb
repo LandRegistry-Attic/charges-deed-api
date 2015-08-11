@@ -23,3 +23,11 @@ Then(/^the api response contains a token for each borrower$/) do
            "Error: Token doesn't exist for borrower #{borrower['id']}")
   end
 end
+
+Given(/^I have created a case$/) do
+  @case_id = create_case_data
+end
+
+Given(/^I have linked the created deed and case$/) do
+  update_case_deed
+end

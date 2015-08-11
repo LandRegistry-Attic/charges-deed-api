@@ -12,4 +12,6 @@ class TestHelloWorld (unittest.TestCase):
     def test_get_api(self, client):
         response = client.get('/helloworld')
         assert response.status_code == 200
-        assert '"Hello": "World"' in response.data.decode()
+
+        result = response.data.decode()
+        assert '"Hello": "World"' in result
