@@ -16,4 +16,9 @@ After do
     puts "Deleting test deed #{@deed_id}..."
     delete_deed_data(@deed_id)
   end
+  ### If case test data has been created  for this scenario then delete it
+  if @case_id
+    puts "Deleting test case #{@case_id}..."
+    delete_case_data(@case_id)
+  end
 end

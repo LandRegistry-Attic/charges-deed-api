@@ -54,7 +54,7 @@ Feature: Make Deed Effective
   - Date must be added to the deed which consists of time stamp (current datetime)
   - The registrars signature must be applied to the deed on making it effective
 
-    When I get the deed from the api
+    When I get the created deed from the api
     Then the signature is applied to the deed
     And the date is applied to the deed
 

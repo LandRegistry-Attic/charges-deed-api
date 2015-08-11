@@ -82,7 +82,17 @@ def update_case_deed
   if response.code == 200
     JSON.parse(response.body)['id']
   else
-    fail "Error: Couldn't create case #{payload}, "\
+    fail "Error: Couldn't update case with deed_id #{payload}, "\
             "Received response #{response.code}"
+  end
+end
+
+def delete_case_data(case_id)
+  response = HTTP.delete(Env.case_api + '/case/' + case_id.to_s)
+  if response.code == 200
+    puts "Case #{case_id} has been deleted."
+  else
+    fail "Error: Couldn't delete deed #{case_id}, "\
+            "received response #{response.code}."
   end
 end

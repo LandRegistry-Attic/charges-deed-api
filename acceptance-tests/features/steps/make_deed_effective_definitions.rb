@@ -3,26 +3,14 @@ Given(/^I have made the created deed effective$/) do
   make_deed_effective(@deed_id)
 end
 
-When(/^I get the deed from the api$/) do
-  @deed = get_deed_data(@deed_id)
-end
-
 Then(/^the signature is applied to the deed$/) do
-  assert(@deed['deed']['operative-deed']['registrars-signature'],
-         'Signature not applied')
+  assert_equal(@deed['deed']['operative-deed']['registrars-signature'],
+         'SIGNATURE')
 end
 
 Then(/^the date is applied to the deed$/) do
-  assert(@deed['deed']['operative-deed']['date-effective'],
-         'Date not applied')
-end
-
-Given(/^I have created a case$/) do
-  @case_id = create_case_data
-end
-
-Given(/^I have linked the created deed and case$/) do
-  update_case_deed
+  date_effective = @deed['deed']['operative-deed']['date-effective']
+  assert_match(Time.now.strftime("%Y-%m-%d"), date_effective)
 end
 
 When(/^I try to sign the deed again$/) do
@@ -30,6 +18,6 @@ When(/^I try to sign the deed again$/) do
                              '/1/signature/')
 end
 
-Then(/^I should get a (\d+) response$/) do |arg1|
-  assert_equal(@response.code.to_s, arg1)
+Then(/^I should get a (\d+) response$/) do |response_code|
+  assert_equal(@response.code.to_s, response_code)
 end
