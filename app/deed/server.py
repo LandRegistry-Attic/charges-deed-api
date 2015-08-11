@@ -92,28 +92,6 @@ def register_routes(blueprint, case_api):
                      methods=['POST'])
     def sign(deed_id, borrower_id):
 
-        def sign_deed(deed_, signature_):
-            deed_json = deed.get_json_doc()
-            signatures = deed_json['operative-deed']['signatures']
-
-            borrower_name = list(
-                filter(lambda borrower:
-                       borrower["id"] == borrower_id,
-                       deed_json['operative-deed']["borrowers"]))[0]["name"]
-
-            user_signature = {
-                "borrower_id": borrower_id,
-                "borrower_name": borrower_name,
-                "signature": signature_
-            }
-            signatures.append(user_signature)
-            try:
-                deed_.json_doc = deed_json
-                deed_.save()
-            except Exception as inst:
-                print(str(type(inst)) + ":" + str(inst))
-                abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
-
         deed = Deed.get(deed_id)
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
@@ -122,7 +100,12 @@ def register_routes(blueprint, case_api):
                 not Deed.borrower_has_signed(deed_id, borrower_id):
 
             signature = request.form['signature']
-            sign_deed(deed, signature)
+            deed.sign_deed(borrower_id, signature)
+            try:
+                deed.save()
+            except Exception as inst:
+                print(str(type(inst)) + ":" + str(inst))
+                abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             if deed.all_borrowers_signed():
                 case_api.update_status(deed_id, 'Deed signed')
