@@ -14,5 +14,5 @@ class TestHelloWorld (unittest.TestCase):
         response = client.get('/helloworld')
         assert response.status_code == 200
 
-        result = json.loads(response.data.decode())
+        result = response.data.decode()
         assert '"Hello": "World"' in result
