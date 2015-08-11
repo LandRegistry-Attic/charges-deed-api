@@ -1,4 +1,3 @@
-import copy
 from flask import request, abort
 from flask.ext.api import status
 from app.deed.model import Deed
@@ -81,7 +80,7 @@ def register_routes(blueprint, case_api):
                 Deed.registrars_signature_exists(deed_id)
 
         def sign_deed(deed_, signature_):
-            deed_json = copy.deepcopy(deed_.json_doc)
+            deed_json = deed.get_json_doc()
             signatures = deed_json['operative-deed']['signatures']
             signatures.append(signature_)
             try:
@@ -95,7 +94,7 @@ def register_routes(blueprint, case_api):
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
         if sign_allowed():
-            signature = request.form['signature']
+            signature = request.data['signature']
             sign_deed(deed, signature)
 
             if deed.all_borrowers_signed():
@@ -114,7 +113,7 @@ def register_routes(blueprint, case_api):
 
         def update_deed():
             try:
-                deed_json = copy.deepcopy(deed.json_doc)
+                deed_json = deed.get_json_doc()
                 operative_deed = deed_json['operative-deed']
                 operative_deed['registrars-signature'] = registrars_signature
                 operative_deed['date-effective'] = str(datetime.now())
