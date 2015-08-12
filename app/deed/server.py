@@ -99,7 +99,7 @@ def register_routes(blueprint, case_api):
         if Deed.borrower_on(deed_id, borrower_id) and \
                 not Deed.borrower_has_signed(deed_id, borrower_id):
 
-            signature = request.form['signature']
+            signature = request.json['signature']
             deed.sign_deed(borrower_id, signature)
             try:
                 deed.save()
