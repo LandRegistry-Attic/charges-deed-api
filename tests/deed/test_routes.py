@@ -61,9 +61,14 @@ class TestDeedRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         signature = "@#$%%^&"
-        response = client.post('/deed/{}/{}/signature/'
-                               .format(deed.id, "1"),
-                               data={"signature": signature})
+        payload = json.dumps({
+            "signature": signature
+        })
+        response = client.post(
+            '/deed/{}/{}/signature/'.format(deed.id, "1"),
+            data=payload,
+            headers={'content-type': 'application/json'}
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(str(signature) in response.data.decode())
