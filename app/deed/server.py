@@ -23,6 +23,22 @@ def register_routes(blueprint, case_api):
         else:
             return {'id': deed.id, 'deed': deed.json_doc}, status.HTTP_200_OK
 
+    @blueprint.route('/deed/<id_>/signed/name', methods=['GET'])
+    def get_names_signed(id_):
+        deed_names = Deed.names_of_all_borrowers_signed(id_)
+
+        return {'names': deed_names}, status.HTTP_200_OK
+
+    @blueprint.route('/deed/<id_>/signed_status', methods=['GET'])
+    def get__signed_status(id_):
+        all_signed = Deed.get(id_).all_borrowers_signed()
+        deed_names = Deed.names_of_all_borrowers_not_signed(id_)
+
+        return {
+            'all_signed': all_signed,
+            'names': deed_names
+        }, status.HTTP_200_OK
+
     @blueprint.route('/deed/', methods=['POST'])
     def create():
         deed = Deed()
@@ -75,27 +91,21 @@ def register_routes(blueprint, case_api):
     @blueprint.route('/deed/<deed_id>/<borrower_id>/signature/',
                      methods=['POST'])
     def sign(deed_id, borrower_id):
-        def sign_allowed():
-            return Deed.matches(deed_id, borrower_id) and not \
-                Deed.registrars_signature_exists(deed_id)
-
-        def sign_deed(deed_, signature_):
-            deed_json = deed.get_json_doc()
-            signatures = deed_json['operative-deed']['signatures']
-            signatures.append(signature_)
-            try:
-                deed_.json_doc = deed_json
-                deed_.save()
-            except Exception as inst:
-                print(str(type(inst)) + ":" + str(inst))
-                abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         deed = Deed.get(deed_id)
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
-        if sign_allowed():
-            signature = request.data['signature']
-            sign_deed(deed, signature)
+
+        if Deed.borrower_on(deed_id, borrower_id) and \
+                not Deed.borrower_has_signed(deed_id, borrower_id):
+
+            signature = request.json['signature']
+            deed.sign_deed(borrower_id, signature)
+            try:
+                deed.save()
+            except Exception as inst:
+                print(str(type(inst)) + ":" + str(inst))
+                abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             if deed.all_borrowers_signed():
                 case_api.update_status(deed_id, 'Deed signed')

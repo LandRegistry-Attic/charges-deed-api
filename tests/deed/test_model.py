@@ -49,3 +49,57 @@ class TestDeedModel (unittest.TestCase):
         deed = Deed.get(deed.id)
 
         self.assertIs(deed, None)
+
+    @with_context
+    def test_borrower_has_signed(self):
+        base_deed = DeedHelper._create_deed_db()
+        johns_id = 1
+
+        has_john_signed = Deed.borrower_has_signed(base_deed.id, johns_id)
+        self.assertFalse(has_john_signed)
+
+        base_deed.sign_deed(johns_id, 'I am John!')
+        base_deed.save()
+
+        has_john_signed = Deed.borrower_has_signed(base_deed.id, johns_id)
+        self.assertTrue(has_john_signed)
+
+    @with_context
+    def test_all_borrowers_signed(self):
+        base_deed = DeedHelper._create_deed_db()
+        johns_id = 1
+
+        has_john_signed = base_deed.all_borrowers_signed()
+        self.assertFalse(has_john_signed)
+
+        base_deed.sign_deed(johns_id, 'I am John!')
+        base_deed.save()
+
+        has_john_signed = base_deed.all_borrowers_signed()
+        self.assertTrue(has_john_signed)
+
+    @with_context
+    def test_names_of_borrowers_signed_and_not(self):
+        base_deed = DeedHelper._create_deed_db()
+        johns_id = 1
+
+        self.assertListEqual(
+            ['John Smith'],
+            Deed.names_of_all_borrowers_not_signed(base_deed.id)
+        )
+        self.assertListEqual(
+            [],
+            Deed.names_of_all_borrowers_signed(base_deed.id)
+        )
+
+        base_deed.sign_deed(johns_id, 'I am John!')
+        base_deed.save()
+
+        self.assertListEqual(
+            [],
+            Deed.names_of_all_borrowers_not_signed(base_deed.id)
+        )
+        self.assertListEqual(
+            ['John Smith'],
+            Deed.names_of_all_borrowers_signed(base_deed.id)
+        )

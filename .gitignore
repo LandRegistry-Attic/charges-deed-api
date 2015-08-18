@@ -11,3 +11,4 @@ test-reports/
 .librarian
 .tmp
 .idea/
+*.swp
