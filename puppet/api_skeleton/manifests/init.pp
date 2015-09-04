@@ -4,7 +4,8 @@ class api_skeleton (
     $host = '0.0.0.0',
     $source = 'git://github.com/LandRegistry/charges-api-skeleton',
     $branch_or_revision = 'master',
-    $domain = 'api.*',
+    $subdomain = 'api',
+    $domain = undef,
     $owner = 'vagrant',
     $group = 'vagrant'
 ) {
@@ -63,6 +64,10 @@ class api_skeleton (
     owner   => $owner,
     group   => $group,
     notify  => Service['nginx'],
+  }
+
+  if $environment == 'development' {
+    standard_env::dev_host { $subdomain: }
   }
 
 }

@@ -1,6 +1,10 @@
 server {
   listen 80;
-  server_name <%= @domain %>;
+  <% if @domain %>
+    server_name <%= @domain %>;
+  <% else %>
+    server_name <%= @subdomain %>.*;
+  <% end %>
 
   location / {
     proxy_set_header X-Forwarded-Host $host;
