@@ -23,7 +23,6 @@ DEED_DATABASE_URI=postgres:///deed_api coverage run --source=app tests.py --xml
 
 test_pass=$?
 
-
 ./run_linting.sh
 
 python_linting=$?

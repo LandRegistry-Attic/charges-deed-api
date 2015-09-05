@@ -2,3 +2,4 @@ colour-runner
 xmlrunner
 lxml
 coverage
+flake8
