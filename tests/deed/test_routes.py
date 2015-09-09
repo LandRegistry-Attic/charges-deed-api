@@ -7,11 +7,12 @@ from app.deed.model import Deed
 from tests.helpers import with_client, setUpApp, \
     with_context, setUpDB, tearDownDB
 from tests.deed.helpers import DeedHelper
+from tests.mock.case_api_mock_impl import MockCaseApi
 
 
 class TestDeedRoutes(unittest.TestCase):
     def setUp(self):
-        setUpApp(self)
+        setUpApp(self, case_api_client=MockCaseApi)
         setUpDB(self)
 
     def tearDown(self):
