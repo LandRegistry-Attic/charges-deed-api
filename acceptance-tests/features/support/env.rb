@@ -11,7 +11,7 @@
 #   Env.domain
 class Env
   def self.domain
-    (ENV['DOMAIN'] || 'http://deedapi.dev.service.gov.uk')
+    (ENV['DOMAIN'] || 'http://deed-api.dev.service.gov.uk')
   end
 
   def self.case_api
