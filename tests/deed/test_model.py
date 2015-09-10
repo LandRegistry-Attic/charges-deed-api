@@ -1,4 +1,4 @@
-from app.deed.model import Deed
+from app.deed import service as deed_service
 import unittest
 from tests.helpers import setUpApp, with_context, setUpDB, tearDownDB
 from tests.deed.helpers import DeedHelper
@@ -17,7 +17,7 @@ class TestDeedModel (unittest.TestCase):
     @with_context
     def test_get(self):
         base_deed = DeedHelper._create_deed_db()
-        deed = Deed.get(base_deed.id)
+        deed = deed_service.get(base_deed.id)
 
         self.assertEqual(deed.id, base_deed.id)
 
@@ -30,7 +30,9 @@ class TestDeedModel (unittest.TestCase):
         base_deed_token = \
             base_deed.json_doc["operative-deed"]["borrowers"][0]["token"]
 
-        retrieved_deed_from_token = Deed.get_deed_by_token(base_deed_token)
+        retrieved_deed_from_token = deed_service.get_deed_by_token(
+            base_deed_token
+        )
 
         self.assertEqual(base_deed.id,
                          retrieved_deed_from_token.id)
@@ -42,12 +44,12 @@ class TestDeedModel (unittest.TestCase):
     @with_context
     def test_delete(self):
         base_deed = DeedHelper._create_deed_db()
-        deed = Deed.get(base_deed.id)
+        deed = deed_service.get(base_deed.id)
 
         self.assertEqual(deed.id, DeedHelper._id)
 
-        Deed.delete(deed.id)
-        deed = Deed.get(deed.id)
+        deed_service.delete(deed.id)
+        deed = deed_service.get(deed.id)
 
         self.assertIs(deed, None)
 
@@ -56,13 +58,15 @@ class TestDeedModel (unittest.TestCase):
         base_deed = DeedHelper._create_deed_db()
         johns_id = 1
 
-        has_john_signed = Deed.borrower_has_signed(base_deed.id, johns_id)
+        has_john_signed = deed_service.borrower_has_signed(base_deed.id,
+                                                           johns_id)
         self.assertFalse(has_john_signed)
 
         base_deed.sign_deed(johns_id, 'I am John!')
         base_deed.save()
 
-        has_john_signed = Deed.borrower_has_signed(base_deed.id, johns_id)
+        has_john_signed = deed_service.borrower_has_signed(base_deed.id,
+                                                           johns_id)
         self.assertTrue(has_john_signed)
 
     @with_context
@@ -86,11 +90,11 @@ class TestDeedModel (unittest.TestCase):
 
         self.assertListEqual(
             ['John Smith'],
-            Deed.names_of_all_borrowers_not_signed(base_deed.id)
+            deed_service.names_of_all_borrowers_not_signed(base_deed.id)
         )
         self.assertListEqual(
             [],
-            Deed.names_of_all_borrowers_signed(base_deed.id)
+            deed_service.names_of_all_borrowers_signed(base_deed.id)
         )
 
         base_deed.sign_deed(johns_id, 'I am John!')
@@ -98,9 +102,9 @@ class TestDeedModel (unittest.TestCase):
 
         self.assertListEqual(
             [],
-            Deed.names_of_all_borrowers_not_signed(base_deed.id)
+            deed_service.names_of_all_borrowers_not_signed(base_deed.id)
         )
         self.assertListEqual(
             ['John Smith'],
-            Deed.names_of_all_borrowers_signed(base_deed.id)
+            deed_service.names_of_all_borrowers_signed(base_deed.id)
         )

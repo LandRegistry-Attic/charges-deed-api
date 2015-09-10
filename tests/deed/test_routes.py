@@ -3,7 +3,7 @@ from random import randint
 
 from flask.ext.api import status
 from flask import json
-from app.deed.model import Deed
+from app.deed import service as deed_service
 from tests.helpers import with_client, setUpApp, \
     with_context, setUpDB, tearDownDB
 from tests.deed.helpers import DeedHelper
@@ -46,7 +46,7 @@ class TestDeedRoutes(unittest.TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        Deed.delete(deed.id)
+        deed_service.delete(deed.id)
 
         response = client.get('/deed/{}'.format(deed.id))
 

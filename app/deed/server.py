@@ -1,5 +1,6 @@
 from flask import request, abort
 from flask.ext.api import status
+from app.deed import service as deed_service
 from app.deed.model import Deed
 from datetime import datetime
 
@@ -7,7 +8,7 @@ from datetime import datetime
 def register_routes(blueprint, case_api):
     @blueprint.route('/deed/<id_>', methods=['GET'])
     def get(id_):
-        deed = Deed.get(id_)
+        deed = deed_service.get(id_)
 
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
@@ -16,7 +17,7 @@ def register_routes(blueprint, case_api):
 
     @blueprint.route('/deed/borrower/<token_>', methods=['GET'])
     def get_with_token(token_):
-        deed = Deed.get_deed_by_token(token_)
+        deed = deed_service.get_deed_by_token(token_)
 
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
@@ -25,14 +26,14 @@ def register_routes(blueprint, case_api):
 
     @blueprint.route('/deed/<id_>/signed/name', methods=['GET'])
     def get_names_signed(id_):
-        deed_names = Deed.names_of_all_borrowers_signed(id_)
+        deed_names = deed_service.names_of_all_borrowers_signed(id_)
 
         return {'names': deed_names}, status.HTTP_200_OK
 
     @blueprint.route('/deed/<id_>/signed_status', methods=['GET'])
     def get__signed_status(id_):
-        all_signed = Deed.get(id_).all_borrowers_signed()
-        deed_names = Deed.names_of_all_borrowers_not_signed(id_)
+        all_signed = deed_service.get(id_).all_borrowers_signed()
+        deed_names = deed_service.names_of_all_borrowers_not_signed(id_)
 
         return {
             'all_signed': all_signed,
@@ -79,7 +80,7 @@ def register_routes(blueprint, case_api):
     @blueprint.route('/deed/<id_>', methods=['DELETE'])
     def delete(id_):
         try:
-            deed = Deed.delete(id_)
+            deed = deed_service.delete(id_)
         except Exception as inst:
             print(str(type(inst)) + ":" + str(inst))
 
@@ -92,12 +93,12 @@ def register_routes(blueprint, case_api):
                      methods=['POST'])
     def sign(deed_id, borrower_id):
 
-        deed = Deed.get(deed_id)
+        deed = deed_service.get(deed_id)
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
 
-        if Deed.borrower_on(deed_id, borrower_id) and \
-                not Deed.borrower_has_signed(deed_id, borrower_id):
+        if deed_service.borrower_on(deed_id, borrower_id) and \
+                not deed_service.borrower_has_signed(deed_id, borrower_id):
 
             signature = request.json['signature']
             deed.sign_deed(borrower_id, signature)
@@ -133,10 +134,10 @@ def register_routes(blueprint, case_api):
                 print(str(type(exc)) + ":" + str(exc))
                 abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        deed = Deed.get(deed_id)
+        deed = deed_service.get(deed_id)
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
-        if not Deed.registrars_signature_exists(deed.id):
+        if not deed_service.registrars_signature_exists(deed.id):
             registrars_signature = request.data['registrars-signature']
 
             update_deed()
