@@ -101,7 +101,7 @@ def register_routes(blueprint, case_api):
                 not deed_service.borrower_has_signed(deed_id, borrower_id):
 
             signature = request.json['signature']
-            deed.sign_deed(borrower_id, signature)
+            deed_service.sign_deed(deed, borrower_id, signature)
             try:
                 deed.save()
             except Exception as inst:

@@ -62,7 +62,7 @@ class TestDeedModel (unittest.TestCase):
                                                            johns_id)
         self.assertFalse(has_john_signed)
 
-        base_deed.sign_deed(johns_id, 'I am John!')
+        deed_service.sign_deed(base_deed, johns_id, 'I am John!')
         base_deed.save()
 
         has_john_signed = deed_service.borrower_has_signed(base_deed.id,
@@ -77,7 +77,7 @@ class TestDeedModel (unittest.TestCase):
         has_john_signed = base_deed.all_borrowers_signed()
         self.assertFalse(has_john_signed)
 
-        base_deed.sign_deed(johns_id, 'I am John!')
+        deed_service.sign_deed(base_deed, johns_id, 'I am John!')
         base_deed.save()
 
         has_john_signed = base_deed.all_borrowers_signed()
@@ -97,7 +97,7 @@ class TestDeedModel (unittest.TestCase):
             deed_service.names_of_all_borrowers_signed(base_deed.id)
         )
 
-        base_deed.sign_deed(johns_id, 'I am John!')
+        deed_service.sign_deed(base_deed, johns_id, 'I am John!')
         base_deed.save()
 
         self.assertListEqual(

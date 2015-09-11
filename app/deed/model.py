@@ -26,20 +26,3 @@ class Deed(db.Model):
 
     def get_json_doc(self):
         return copy.deepcopy(self.json_doc)
-
-    def sign_deed(self, borrower_id, signature):
-        deed_json = self.get_json_doc()
-        signatures = deed_json['operative-deed']['signatures']
-
-        borrower_name = list(
-            filter(lambda borrower:
-                   borrower["id"] == str(borrower_id),
-                   deed_json['operative-deed']["borrowers"]))[0]["name"]
-
-        user_signature = {
-            "borrower_id": borrower_id,
-            "borrower_name": borrower_name,
-            "signature": signature
-        }
-        signatures.append(user_signature)
-        self.json_doc = deed_json

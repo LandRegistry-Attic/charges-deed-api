@@ -134,3 +134,23 @@ def registrars_signature_exists(deed_id):
     operative_deed_dct = deed.json_doc['operative-deed']
 
     return 'registrars-signature' in operative_deed_dct
+
+
+def sign_deed(deed, borrower_id, signature):
+    deed_json = deed.get_json_doc()
+    signatures = deed_json['operative-deed']['signatures']
+
+    borrower_name = list(
+        filter(lambda borrower:
+               borrower["id"] == str(borrower_id),
+               deed_json['operative-deed']["borrowers"]))[0]["name"]
+
+    user_signature = {
+        "borrower_id": borrower_id,
+        "borrower_name": borrower_name,
+        "signature": signature
+    }
+    signatures.append(user_signature)
+    deed.json_doc = deed_json
+
+    return deed

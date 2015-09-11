@@ -165,7 +165,7 @@ class TestDeedRoutes(unittest.TestCase):
 
         self.assertEquals([], resp_json['names'])
 
-        deed.sign_deed(1, "I'm John Smith!")
+        deed_service.sign_deed(deed, 1, "I'm John Smith!")
         deed.save()
 
         response = client.get('/deed/{}/signed/name'.format(deed.id))
@@ -184,7 +184,7 @@ class TestDeedRoutes(unittest.TestCase):
         self.assertEquals(['John Smith'], resp_json['names'])
         self.assertFalse(resp_json['all_signed'])
 
-        deed.sign_deed(1, "I'm John Smith!")
+        deed_service.sign_deed(deed, 1, "I'm John Smith!")
         deed.save()
 
         response = client.get('/deed/{}/signed_status'.format(deed.id))
