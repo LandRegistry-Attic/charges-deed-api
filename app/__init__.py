@@ -2,10 +2,10 @@ from flask.ext.script import Manager
 from flask.ext.api import FlaskAPI
 from app import helloworld, db
 from app import deed
-from app.service.case_api import make_case_client
+from app.service.case_api import CaseApi
 
 
-def create_manager(case_api_client=make_case_client):
+def create_manager(case_api_client=CaseApi):
     app = FlaskAPI(__name__)
     app.config.from_pyfile('config.py')
 

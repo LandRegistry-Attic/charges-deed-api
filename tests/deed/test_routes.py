@@ -3,15 +3,16 @@ from random import randint
 
 from flask.ext.api import status
 from flask import json
-from app.deed.model import Deed
+from app.deed import service as deed_service
 from tests.helpers import with_client, setUpApp, \
     with_context, setUpDB, tearDownDB
 from tests.deed.helpers import DeedHelper
+from tests.mock.case_api_mock_impl import MockCaseApi
 
 
 class TestDeedRoutes(unittest.TestCase):
     def setUp(self):
-        setUpApp(self)
+        setUpApp(self, case_api_client=MockCaseApi)
         setUpDB(self)
 
     def tearDown(self):
@@ -45,7 +46,7 @@ class TestDeedRoutes(unittest.TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        Deed.delete(deed.id)
+        deed_service.delete(deed.id)
 
         response = client.get('/deed/{}'.format(deed.id))
 
@@ -164,7 +165,7 @@ class TestDeedRoutes(unittest.TestCase):
 
         self.assertEquals([], resp_json['names'])
 
-        deed.sign_deed(1, "I'm John Smith!")
+        deed_service.sign_deed(deed, 1, "I'm John Smith!")
         deed.save()
 
         response = client.get('/deed/{}/signed/name'.format(deed.id))
@@ -183,7 +184,7 @@ class TestDeedRoutes(unittest.TestCase):
         self.assertEquals(['John Smith'], resp_json['names'])
         self.assertFalse(resp_json['all_signed'])
 
-        deed.sign_deed(1, "I'm John Smith!")
+        deed_service.sign_deed(deed, 1, "I'm John Smith!")
         deed.save()
 
         response = client.get('/deed/{}/signed_status'.format(deed.id))

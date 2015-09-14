@@ -1,5 +1,6 @@
 from random import randint
 from app.deed.model import Deed
+from app.deed import service as deed_service
 
 
 class DeedHelper:
@@ -75,4 +76,4 @@ class DeedHelper:
 
     @staticmethod
     def _delete_deed(_id):
-        Deed.delete(_id)
+        deed_service.delete(_id)
