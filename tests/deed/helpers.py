@@ -19,7 +19,6 @@ class DeedHelper:
             }
         ],
         "restrictions": [],
-        "signatures": [],
         "effective-clause": "const",
         "lender": {
             "name": "Bank Test",
@@ -55,9 +54,12 @@ class DeedHelper:
 
         new_jdoc["borrowers"][0]["token"] = Deed.generate_token()
 
-        new_jdoc = {"operative-deed": new_jdoc}
-
-        deed.json_doc = new_jdoc
+        deed.json_doc = {
+            'deed': {
+                'operative-deed': new_jdoc,
+                "signatures": []
+            }
+        }
 
         deed.save()
 

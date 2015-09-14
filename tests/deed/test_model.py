@@ -26,8 +26,8 @@ class TestDeedModel (unittest.TestCase):
     def test_get_deed_by_token(self):
         base_deed = DeedHelper._create_deed_db()
 
-        base_deed_token = \
-            base_deed.json_doc["operative-deed"]["borrowers"][0]["token"]
+        operative_deed_ = base_deed.json_doc['deed']["operative-deed"]
+        base_deed_token = operative_deed_["borrowers"][0]["token"]
 
         retrieved_deed_from_token = Deed.get_deed_by_token(base_deed_token)
 

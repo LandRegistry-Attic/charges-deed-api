@@ -112,7 +112,7 @@ class TestDeedRoutes(unittest.TestCase):
     def test_get_by_token(self, client):
         deed = DeedHelper._create_deed_db()
 
-        token = deed.json_doc["operative-deed"]["borrowers"][0]["token"]
+        token = deed.json_doc['deed']["operative-deed"]["borrowers"][0]["token"]
         response = client.get('/deed/borrower/{}'.format(token))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

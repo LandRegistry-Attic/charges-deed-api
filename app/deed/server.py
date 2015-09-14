@@ -12,7 +12,8 @@ def register_routes(blueprint, case_api):
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
         else:
-            return {'id': deed.id, 'deed': deed.json_doc}, status.HTTP_200_OK
+            deed.json_doc['id'] = deed.id
+            return deed.json_doc
 
     @blueprint.route('/deed/borrower/<token_>', methods=['GET'])
     def get_with_token(token_):
@@ -21,7 +22,7 @@ def register_routes(blueprint, case_api):
         if deed is None:
             abort(status.HTTP_404_NOT_FOUND)
         else:
-            return {'id': deed.id, 'deed': deed.json_doc}, status.HTTP_200_OK
+            return {'id': deed.id, 'deed': deed.json_doc['deed']}
 
     @blueprint.route('/deed/<id_>/signed/name', methods=['GET'])
     def get_names_signed(id_):
@@ -35,9 +36,9 @@ def register_routes(blueprint, case_api):
         deed_names = Deed.names_of_all_borrowers_not_signed(id_)
 
         return {
-            'all_signed': all_signed,
-            'names': deed_names
-        }, status.HTTP_200_OK
+                   'all_signed': all_signed,
+                   'names': deed_names
+               }, status.HTTP_200_OK
 
     @blueprint.route('/deed/', methods=['POST'])
     def create():
@@ -48,26 +49,30 @@ def register_routes(blueprint, case_api):
             borrower["token"] = Deed.generate_token()
 
         json_doc = {
-            "operative-deed": {
-                "mdref": deed_json['mdref'],
-                "title": deed_json['title'],
-                "lender": deed_json['lender'],
-                "borrowers": deed_json['borrowers'],
-                "charging-clause": "You, the borrower, with full title "
-                                   "guarantee, charge property to the "
-                                   "lender by way of legal mortgage with "
-                                   "the payment of all money secured by this"
-                                   " charge.",
-                "effective-clause": "This charge takes effect when the "
-                                    "registrar receives notification from "
-                                    "Bailey & Co Solicitors, who prepared "
-                                    "this charge. The effective date and time "
-                                    "is applied by the registrar on "
-                                    "completion.",
-                "signatures": [],
-                "restrictions": deed_json['restrictions'],
-                "provisions": deed_json['provisions']
-            }}
+            "deed": {
+                "operative-deed": {
+                    "mdref": deed_json['mdref'],
+                    "title": deed_json['title'],
+                    "lender": deed_json['lender'],
+                    "borrowers": deed_json['borrowers'],
+                    "charging-clause": "You, the borrower, with full title "
+                                       "guarantee, charge property to the "
+                                       "lender by way of legal mortgage with "
+                                       "the payment of all money secured by this"
+                                       " charge.",
+                    "effective-clause": "This charge takes effect when the "
+                                        "registrar receives notification from "
+                                        "Bailey & Co Solicitors, who prepared "
+                                        "this charge. The effective date and time "
+                                        "is applied by the registrar on "
+                                        "completion.",
+                    "restrictions": deed_json['restrictions'],
+                    "provisions": deed_json['provisions']
+                },
+                "signatures": []
+            }
+        }
+
         deed.json_doc = json_doc
         try:
             deed.save()
@@ -124,9 +129,8 @@ def register_routes(blueprint, case_api):
         def update_deed():
             try:
                 deed_json = deed.get_json_doc()
-                operative_deed = deed_json['operative-deed']
-                operative_deed['registrars-signature'] = registrars_signature
-                operative_deed['date-effective'] = str(datetime.now())
+                deed_json['registrars-signature'] = registrars_signature
+                deed_json['date-effective'] = str(datetime.now())
                 deed.json_doc = deed_json
                 deed.save()
             except Exception as exc:

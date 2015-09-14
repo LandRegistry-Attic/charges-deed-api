@@ -30,7 +30,8 @@ class Deed(db.Model):
                    "FROM deed AS the_deed "
                    "WHERE :token in "
                    "(SELECT jsonb_array_elements("
-                   "json_doc -> 'operative-deed' -> 'borrowers') ->> 'token' "
+                   "json_doc -> 'deed' -> 'operative-deed' -> "
+                   "'borrowers') ->> 'token' "
                    "FROM deed WHERE id = the_deed.id)")
 
         result = conn.execute(sql, token=token_) \
@@ -63,96 +64,61 @@ class Deed(db.Model):
 
     @staticmethod
     def borrower_on(deed_id, borrower_id):
-        conn = db.session.connection()
+        deed = Deed.get(deed_id)
+        borrowers = deed.json_doc['deed']['operative-deed']['borrowers']
 
-        sql = text("select "
-                   "count(*) as count "
-                   "from (select "
-                   "jsonb_array_elements(json_doc -> 'operative-deed' -> "
-                   "'borrowers') "
-                   "as borrower from deed where id = :deed_id) "
-                   "as borrowers "
-                   "where borrower ->> 'id' = :borrower_id")
+        for borrower in borrowers:
+            if int(borrower['id']) == int(borrower_id):
+                return True
 
-        result = conn.execute(sql, deed_id=deed_id, borrower_id=borrower_id) \
-            .fetchall()
-
-        for row in result:
-            return int(row['count']) > 0
+        return False
 
     @staticmethod
     def borrower_has_signed(deed_id, borrower_id):
-        conn = db.session.connection()
+        deed = Deed.get(deed_id)
+        signatures = deed.json_doc['deed']['signatures']
 
-        sql = text("select count(signatures) as count "
-                   "from (select "
-                   "jsonb_array_elements(json_doc -> "
-                   "'operative-deed' -> 'signatures') as signature "
-                   "from deed where id = :deed_id) "
-                   "as signatures "
-                   "where signature ->> 'borrower_id' = :borrower_id ")
+        for signature in signatures:
+            if int(signature['borrower_id']) == int(borrower_id):
+                return True
 
-        result = conn.execute(sql,
-                              deed_id=deed_id,
-                              borrower_id=str(borrower_id)).fetchall()
-
-        for row in result:
-            return int(row['count']) > 0
+        return False
 
     @staticmethod
     def names_of_all_borrowers_signed(deed_id):
-        conn = db.session.connection()
+        deed = Deed.get(deed_id)
+        signatures = deed.json_doc['deed']['signatures']
 
-        sql = text("select jsonb_array_elements(json_doc -> "
-                   "'operative-deed' -> 'signatures') "
-                   "->> 'borrower_name' as borrower_name "
-                   "from deed where id = :deed_id")
-
-        result = conn.execute(sql, deed_id=deed_id) \
-            .fetchall()
-
-        def borrower_name(arr):
-            return str(arr[0])
-
-        borrower_names = list(map(borrower_name, result))
-        return borrower_names
+        return [signature['borrower_name'] for signature in signatures]
 
     @staticmethod
     def names_of_all_borrowers_not_signed(deed_id):
-        conn = db.session.connection()
+        deed = Deed.get(deed_id)
+        signatures = deed.json_doc['deed']['signatures']
+        borrower_ids_signed = [int(sgn['borrower_id']) for sgn in signatures]
+        borrowers = deed.json_doc['deed']['operative-deed']['borrowers']
 
-        sql = text("select jsonb_array_elements(borrowers) ->> 'name'"
-                   "from (select jsonb_array_elements(json_doc -> "
-                   "'operative-deed' -> 'borrowers') "
-                   "from deed where id = :deed_id) as borrowers "
-                   "where jsonb_array_elements(borrowers) "
-                   "->> 'id' not in (select "
-                   "jsonb_array_elements(json_doc -> "
-                   "'operative-deed' -> 'signatures') ->> "
-                   "'borrower_id' from deed where id = :deed_id) ")
+        result = list()
 
-        result = conn.execute(sql, deed_id=deed_id) \
-            .fetchall()
+        for borrower in borrowers:
+            if int(borrower['id']) not in borrower_ids_signed:
+                result.append(borrower['name'])
 
-        def borrower_name(arr):
-            return str(arr[0])
-
-        borrower_names = list(map(borrower_name, result))
-        return borrower_names
+        return result
 
     def all_borrowers_signed(self):
-        operative_deed = self.json_doc['operative-deed']
+        deed_ = self.json_doc['deed']
+        operative_deed = deed_['operative-deed']
         borrowers_length = len(operative_deed['borrowers'])
-        signature_len = len(operative_deed['signatures'])
+        signature_len = len(deed_['signatures'])
 
         return borrowers_length == signature_len
 
     @staticmethod
     def registrars_signature_exists(deed_id):
         deed = Deed.query.filter_by(id=deed_id).first()
-        operative_deed_dct = deed.json_doc['operative-deed']
 
-        return 'registrars-signature' in operative_deed_dct
+        return 'registrars-signature' in deed.json_doc
 
     @staticmethod
     def generate_token():
@@ -163,12 +129,13 @@ class Deed(db.Model):
 
     def sign_deed(self, borrower_id, signature):
         deed_json = self.get_json_doc()
-        signatures = deed_json['operative-deed']['signatures']
+        operative_deed = deed_json['deed']['operative-deed']
+        signatures = deed_json['deed']['signatures']
 
         borrower_name = list(
             filter(lambda borrower:
                    borrower["id"] == str(borrower_id),
-                   deed_json['operative-deed']["borrowers"]))[0]["name"]
+                   operative_deed["borrowers"]))[0]["name"]
 
         user_signature = {
             "borrower_id": borrower_id,
