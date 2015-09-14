@@ -1,8 +1,6 @@
 from functools import wraps
 from app import create_manager
 from app.db import db
-from app.service.case_api import interface
-from tests.mock import case_api_mock_impl
 
 
 def with_context(test):
@@ -24,12 +22,8 @@ def with_client(test):
     return _wrapped_test
 
 
-def make_case_client():
-    return interface.CaseApiInterface(case_api_mock_impl)
-
-
-def setUpApp(self, case_api_mock_client=make_case_client):
-    manager = create_manager(case_api_client=case_api_mock_client)
+def setUpApp(self, **kwargs):
+    manager = create_manager(**kwargs)
     self.app = manager.app
     self.manager = manager
     self.app.config['TESTING'] = True

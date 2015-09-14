@@ -1,5 +1,4 @@
 from app.db import db, json_type
-from sqlalchemy.sql import text
 import copy
 import uuid
 
