@@ -33,13 +33,11 @@ def register_routes(blueprint, case_api):
 
     @blueprint.route('/deed/<id_>/signed_status', methods=['GET'])
     def get__signed_status(id_):
-        all_signed = deed_service.get(id_).all_borrowers_signed()
+        deed = deed_service.get(id_)
+        all_signed = deed_service.all_borrowers_signed(deed)
         deed_names = deed_service.names_of_all_borrowers_not_signed(id_)
 
-        return {
-                   'all_signed': all_signed,
-                   'names': deed_names
-               }, status.HTTP_200_OK
+        return {'all_signed': all_signed, 'names': deed_names}
 
     @blueprint.route('/deed/', methods=['POST'])
     def create():
@@ -59,13 +57,13 @@ def register_routes(blueprint, case_api):
                     "charging-clause": "You, the borrower, with full title "
                                        "guarantee, charge property to the "
                                        "lender by way of legal mortgage with "
-                                       "the payment of all money secured by this"
-                                       " charge.",
+                                       "the payment of all money secured by "
+                                       "this charge.",
                     "effective-clause": "This charge takes effect when the "
                                         "registrar receives notification from "
                                         "Bailey & Co Solicitors, who prepared "
-                                        "this charge. The effective date and time "
-                                        "is applied by the registrar on "
+                                        "this charge. The effective date and "
+                                        "time is applied by the registrar on "
                                         "completion.",
                     "restrictions": deed_json['restrictions'],
                     "provisions": deed_json['provisions']
@@ -113,7 +111,7 @@ def register_routes(blueprint, case_api):
                 print(str(type(inst)) + ":" + str(inst))
                 abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            if deed.all_borrowers_signed():
+            if deed_service.all_borrowers_signed(deed):
                 case_api.update_status(deed_id, 'Deed signed')
         else:
             abort(status.HTTP_403_FORBIDDEN)
