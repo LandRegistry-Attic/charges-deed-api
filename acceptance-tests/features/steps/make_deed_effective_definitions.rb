@@ -4,8 +4,7 @@ Given(/^I have made the created deed effective$/) do
 end
 
 Then(/^the signature is applied to the deed$/) do
-  assert_equal(@deed['deed']['operative-deed']['registrars-signature'],
-               'SIGNATURE')
+  assert_equal('SIGNATURE', @deed['registrars-signature'])
 end
 
 Then(/^the date is applied to the deed$/) do
