@@ -19,7 +19,11 @@ git submodule update --init
 
 rubocop=$?
 
-DEED_DATABASE_URI=postgres:///deed_api coverage run --source=app tests.py --xml
+createdb -O tomcat $JOB_NAME
+
+DEED_DATABASE_URI=postgres:///$JOB_NAME coverage run --source=app tests.py --xml
+
+dropdb $JOB_NAME
 
 test_pass=$?
 
