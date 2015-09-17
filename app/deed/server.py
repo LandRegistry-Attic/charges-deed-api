@@ -3,6 +3,7 @@ from flask.ext.api import status
 from app.deed import service as deed_service
 from app.deed.model import Deed
 from datetime import datetime
+from app.service.case_api import CaseApi
 
 
 def register_routes(blueprint, case_api):
