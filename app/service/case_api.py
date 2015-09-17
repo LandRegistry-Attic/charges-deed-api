@@ -19,3 +19,10 @@ class CaseApi(object):
             case_id=str(case_id)
         )
         return requests.get(url)
+
+    def get_property(self, case_id):
+        url = "{base}/case/{case_id}/property".format(
+            base=self.CASE_API_BASE_HOST,
+            case_id=str(case_id)
+        )
+        return requests.get(url)
