@@ -14,6 +14,8 @@ class CaseApi(object):
         return requests.post(url, data=body)
 
     def get_borrowers(self, case_id):
-        url = "{base}/case/{case_id}/borrowers"
+        url = "{base}/case/{case_id}/borrowers".format(
+            base=self.CASE_API_BASE_HOST,
+            case_id=str(case_id)
+        )
         return requests.get(url)
-            

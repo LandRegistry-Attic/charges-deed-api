@@ -3,6 +3,7 @@ from flask.ext.api import status
 from app.deed import service as deed_service
 from app.deed.model import Deed
 from datetime import datetime
+from app.service.case_api import CaseApi
 
 
 def register_routes(blueprint, case_api):
@@ -44,16 +45,13 @@ def register_routes(blueprint, case_api):
         deed = Deed()
         deed_json = request.get_json()
 
-        for borrower in deed_json['borrowers']:
-            borrower["token"] = Deed.generate_token()
-
         json_doc = {
             "deed": {
                 "operative-deed": {
                     "mdref": deed_json['mdref'],
                     "title": deed_json['title'],
                     "lender": deed_json['lender'],
-                    "borrowers": deed_json['borrowers'],
+                    "borrowers": [],
                     "charging-clause": "You, the borrower, with full title "
                                        "guarantee, charge property to the "
                                        "lender by way of legal mortgage with "
@@ -71,6 +69,12 @@ def register_routes(blueprint, case_api):
                 "signatures": []
             }
         }
+
+        borrowers = CaseApi().get_borrowers(deed_json['case_id']).json()
+
+        for borrower in borrowers:
+            borrower["token"] = Deed.generate_token()
+            json_doc["deed"]["operative-deed"]["borrowers"].append(borrower)
 
         deed.json_doc = json_doc
         try:
