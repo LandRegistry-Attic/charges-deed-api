@@ -70,7 +70,6 @@ def register_routes(blueprint, case_api):
         }
 
         borrowers = case_api.get_borrowers(deed_json['case_id']).json()
-        print (borrowers)
 
         for borrower in borrowers:
             borrower["token"] = Deed.generate_token()
