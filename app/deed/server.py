@@ -74,13 +74,19 @@ def register_routes(blueprint, case_api):
             borrower["token"] = Deed.generate_token()
             json_doc["deed"]["operative-deed"]["borrowers"].append(borrower)
 
-        property = case_api.get_property(deed_json['case_id']).json()
-        title_json = {"title-number": property['title_number'],
-                      "address": {"street-address": property['street'],
-                                  "postal-code": property['postcode'],
-                                  "locality": property['locality'],
-                                  "extended-address": property.get('extended')
-                                  }}
+        def extract_title():
+            property_ = case_api.get_property(deed_json['case_id']).json()
+            return {
+                "title-number": property_['title_number'],
+                "address": {
+                    "street-address": property_['street'],
+                    "postal-code": property_['postcode'],
+                    "locality": property_['locality'],
+                    "extended-address": property_.get('extended')
+                }
+            }
+
+        title_json = extract_title()
 
         json_doc["deed"]["operative-deed"]["title"] = title_json
 
