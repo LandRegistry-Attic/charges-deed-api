@@ -1,10 +1,10 @@
 import json
 from flask import jsonify, Response
 from flask.ext.api import status
+from .mock_response import MockResponse
 
 
 class MockCaseApi(object):
-
     def update_status(self, deed_id, case_status):
         return jsonify(status_code=status.HTTP_200_OK)
 
@@ -22,8 +22,7 @@ class MockCaseApi(object):
         return Response(borrower_json, status=200, mimetype="application/json")
 
     def get_property(self, case_id):
-
-        return {"title": {
+        return MockResponse({"title_number": {
             "address": {
                 "street-address": "test street",
                 "postal-code": "RG1 1DP",
