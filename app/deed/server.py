@@ -3,7 +3,6 @@ from flask.ext.api import status
 from app.deed import service as deed_service
 from app.deed.model import Deed
 from datetime import datetime
-from app.service.case_api import CaseApi
 
 
 def register_routes(blueprint, case_api):
@@ -78,13 +77,11 @@ def register_routes(blueprint, case_api):
 
         property = case_api.get_property(deed_json['case_id']).json()
         title_json = {"title-number": property['title_number'],
-                      "address": {
-                            "street-address": property['street'],
-                            "postal-code": property['postcode'],
-                            "locality": property['locality'],
-                            "extended-address": property.get('extended')
-                        }
-                     }
+                      "address": {"street-address": property['street'],
+                                  "postal-code": property['postcode'],
+                                  "locality": property['locality'],
+                                  "extended-address": property.get('extended')
+                                  }}
 
         json_doc["deed"]["operative-deed"]["title"] = title_json
 
