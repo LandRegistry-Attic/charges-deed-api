@@ -18,6 +18,7 @@ class MockCaseApi(object):
                 "middle_names": "",
                 "address": ["2 rap street", "", "faketown", "F4K3"],
                 "case_id": 16}])
+                
 
     def get_property(self, case_id):
         return MockResponse({"title_number": "LO3827",
