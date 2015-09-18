@@ -69,13 +69,14 @@ def register_routes(blueprint, case_api):
             }
         }
 
-        borrowers = CaseApi().get_borrowers(deed_json['case_id']).json()
+        borrowers = case_api.get_borrowers(deed_json['case_id']).json()
+        print (borrowers)
 
         for borrower in borrowers:
             borrower["token"] = Deed.generate_token()
             json_doc["deed"]["operative-deed"]["borrowers"].append(borrower)
 
-        property = CaseApi().get_property(deed_json['case_id']).json()
+        property = case_api.get_property(deed_json['case_id']).json()
         title_json = {"title-number": property['title_number'],
                       "address": {
                             "street-address": property['street'],
