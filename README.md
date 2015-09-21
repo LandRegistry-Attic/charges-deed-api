@@ -38,7 +38,7 @@ pip install -r requirements_test.txt
 
 Export your database URI
 ```
-export DATABASE_URI=postgresql://username:password@localhost/database
+export DEED_DATABASE_URI=postgres:///deed_api
 ```
 
 To run the migration run the command
