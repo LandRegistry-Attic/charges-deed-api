@@ -92,7 +92,15 @@ def names_of_all_borrowers_not_signed(deed_id):
 
     for borrower in borrowers:
         if int(borrower['id']) not in borrower_ids_signed:
-            result.append(borrower['name'])
+
+            if borrower["middle_names"] != "":
+                middlename = borrower["middle_names"] + " "
+            else:
+                middlename = ""
+
+            fullborrowername = borrower["first_name"] + " " + middlename + borrower["last_name"]
+
+            result.append(fullborrowername)
 
     return result
 
@@ -100,6 +108,8 @@ def names_of_all_borrowers_not_signed(deed_id):
 def names_of_all_borrowers_signed(deed_id):
     deed = get(deed_id)
     signatures = deed.json_doc['deed']['signatures']
+
+    print (str(signatures))
 
     return [signature['borrower_name'] for signature in signatures]
 
@@ -115,10 +125,21 @@ def sign_deed(self, borrower_id, signature):
     operative_deed = deed_json['deed']['operative-deed']
     signatures = deed_json['deed']['signatures']
 
+    borrowersfield = operative_deed["borrowers"][0]
+
+    #print ("Borrowers field = " + str(borrowersfield))
+
+    if borrowersfield["middle_names"] != "":
+        middlename = borrowersfield["middle_names"] + " "
+    else:
+        middlename = ""
+
+    fullborrowername = borrowersfield["first_name"] + " " + middlename + borrowersfield["last_name"]
+
     borrower_name = list(
         filter(lambda borrower:
-               borrower["id"] == str(borrower_id),
-               operative_deed["borrowers"]))[0]["name"]
+               borrower[0] == str(borrower_id),
+               fullborrowername))
 
     user_signature = {
         "borrower_id": borrower_id,
