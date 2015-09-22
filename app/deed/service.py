@@ -110,6 +110,8 @@ def names_of_all_borrowers_signed(deed_id):
     deed = get(deed_id)
     signatures = deed.json_doc['deed']['signatures']
 
+    print (str(signatures))
+
     return [signature['borrower_name'] for signature in signatures]
 
 
@@ -123,9 +125,28 @@ def sign_deed(self, borrower_id, signature):
     deed_json = self.get_json_doc()
     operative_deed = deed_json['deed']['operative-deed']
     signatures = deed_json['deed']['signatures']
+<<<<<<< HEAD
     borrower_name = list(
         filter(lambda borrower: borrower["id"] == str(borrower_id),
                operative_deed["borrowers"]))[0]["name"]
+=======
+
+    borrowersfield = operative_deed["borrowers"][0]
+
+    #print ("Borrowers field = " + str(borrowersfield))
+
+    if borrowersfield["middle_names"] != "":
+        middlename = borrowersfield["middle_names"] + " "
+    else:
+        middlename = ""
+
+    fullborrowername = borrowersfield["first_name"] + " " + middlename + borrowersfield["last_name"]
+
+    borrower_name = list(
+        filter(lambda borrower:
+               borrower[0] == str(borrower_id),
+               fullborrowername))
+>>>>>>> 3da799e... Started changes to remove name block and replace with name in parts
 
     user_signature = {
         "borrower_id": borrower_id,
