@@ -25,3 +25,6 @@ include Test::Unit::Assertions
 
 ### Require gems such as httprb for interacting with the APIs
 require 'http'
+
+### Require pry gem for debugging purposes
+require 'pry'
