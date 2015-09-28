@@ -10,15 +10,13 @@ Before do
 end
 
 ### Code that is executed after acceptance tests for each feature have run
-After do
-  ### If deed test data has been created  for this scenario then delete it
-  if @deed_id
-    puts "Deleting test deed #{@deed_id}..."
-    delete_deed_data(@deed_id)
+After ('@delete_test_data') do
+  if @created_deed_id
+    puts "Deleting test deed #{@created_deed_id}"
+    delete_deed_data(@created_deed_id)
   end
-  ### If case test data has been created  for this scenario then delete it
-  if @case_id
-    puts "Deleting test case #{@case_id}..."
-    delete_case_data(@case_id)
+  if @created_case_id
+    puts "Deleting test case #{@created_case_id}"
+    delete_case_data(@created_case_id)
   end
 end

@@ -5,6 +5,7 @@ Feature: Identify Borrowers and Their Deed
   I want to view my deed
   so that I can sign it
 
+@delete_test_data
 Scenario: Tokens Generated on Deed Creation
 
   - deed api should create tokens when deed is created

@@ -7,6 +7,7 @@ Feature: Make Deed Effective
 Background:
   Given I have created a case and deed with one borrower that is effective
 
+@delete_test_data
 Scenario: Date and Signature Applied when Deed is Made Effective
 
 - Date must be added to the deed which consists of time stamp (current datetime)
@@ -16,6 +17,7 @@ Scenario: Date and Signature Applied when Deed is Made Effective
   Then the registrars signature is applied to the deed
   And the effective date is applied to the deed
 
+@delete_test_data
 Scenario: Deed is Locked from Changes once it is Made Effective
 
 - Once deed has been made effective, it must be locked and no further changes allowed (i.e. any endpoint that updates the deed needs to check whether the deed has been "locked" by the registrar before applying the change to the DB)
