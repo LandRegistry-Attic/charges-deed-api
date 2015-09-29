@@ -125,31 +125,23 @@ def sign_deed(self, borrower_id, signature):
     deed_json = self.get_json_doc()
     operative_deed = deed_json['deed']['operative-deed']
     signatures = deed_json['deed']['signatures']
-<<<<<<< HEAD
     borrower_name = list(
         filter(lambda borrower: borrower["id"] == str(borrower_id),
                operative_deed["borrowers"]))[0]["name"]
-=======
 
-    borrowersfield = operative_deed["borrowers"][0]
+    borrowers = operative_deed["borrowers"][0]
 
-    if borrowersfield["middle_names"] != "":
-        middlename = borrowersfield["middle_names"] + " "
-    else:
-        middlename = ""
+    names = [borrowers["first_name"], borrowers["middle_names"], borrowers["last_name"]]
 
-    fullborrowername = borrowersfield["first_name"] + " " + middlename + \
-        borrowersfield["last_name"]
+    # strings return false if they are empty or null, this lambda strips out those
+    names_list = list(filter(lambda name: bool(name), names))
 
-    borrower_name = list(
-        filter(lambda borrower:
-               borrower[0] == str(borrower_id),
-               fullborrowername))
->>>>>>> 3da799e... Started changes to remove name block and replace with name in parts
+    # whats left gets joined together
+    full_borrower_name = ' '.join(names_list)
 
     user_signature = {
         "borrower_id": borrower_id,
-        "borrower_name": borrower_name,
+        "borrower_name": full_borrower_name,
         "signature": signature
     }
     signatures.append(user_signature)
