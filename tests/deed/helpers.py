@@ -11,6 +11,7 @@ class DeedHelper:
         "borrowers": [
             {
                 "id": "1",
+                "name": "John Smith",
                 "first_name": "John",
                 "middle_names": "",
                 "last_name": "Smith",
