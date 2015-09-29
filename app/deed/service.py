@@ -133,14 +133,13 @@ def sign_deed(self, borrower_id, signature):
 
     borrowersfield = operative_deed["borrowers"][0]
 
-    #print ("Borrowers field = " + str(borrowersfield))
-
     if borrowersfield["middle_names"] != "":
         middlename = borrowersfield["middle_names"] + " "
     else:
         middlename = ""
 
-    fullborrowername = borrowersfield["first_name"] + " " + middlename + borrowersfield["last_name"]
+    fullborrowername = borrowersfield["first_name"] + " " + middlename + \
+        borrowersfield["last_name"]
 
     borrower_name = list(
         filter(lambda borrower:
