@@ -72,6 +72,16 @@ def register_routes(blueprint, case_api):
         print (borrowers)
 
         for borrower in borrowers:
+            def set_name(borrower):
+                name = "{first_name} {middle_names}{last_name}".format(
+                       first_name = borrower["first_name"],
+                       middle_names=borrower["middle_names"] + " "
+                       if borrower["middle_names"] != '' else '',
+                       last_name = borrower["last_name"] )
+
+                borrower["name"] = name
+
+            set_name(borrower)
             borrower["token"] = Deed.generate_token()
             json_doc["deed"]["operative-deed"]["borrowers"].append(borrower)
 
