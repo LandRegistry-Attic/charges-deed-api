@@ -125,15 +125,15 @@ def sign_deed(self, borrower_id, signature):
     deed_json = self.get_json_doc()
     operative_deed = deed_json['deed']['operative-deed']
     signatures = deed_json['deed']['signatures']
-    borrower_name = list(
-        filter(lambda borrower: borrower["id"] == str(borrower_id),
-               operative_deed["borrowers"]))[0]["name"]
+    names = ""
+    borrowers = operative_deed["borrowers"]
+    for borrower in borrowers:
+        if borrower["id"] == int(borrower_id):
+            names = [borrower["first_name"], borrower["middle_names"],
+                     borrower["last_name"]]
 
-    borrowers = operative_deed["borrowers"][0]
-
-    names = [borrowers["first_name"], borrowers["middle_names"], borrowers["last_name"]]
-
-    # strings return false if they are empty or null, this lambda strips out those
+    # strings return false if they are empty or null,
+    # this lambda strips out those
     names_list = list(filter(lambda name: bool(name), names))
 
     # whats left gets joined together

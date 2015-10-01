@@ -73,13 +73,16 @@ def register_routes(blueprint, case_api):
 
         for borrower in borrowers:
             def set_name(borrower):
-                name = "{first_name} {middle_names}{last_name}".format(
-                       first_name=borrower["first_name"],
-                       middle_names=borrower["middle_names"] + " "
-                       if borrower["middle_names"] != '' else '',
-                       last_name=borrower["last_name"])
+                names = [borrower["first_name"], borrower["middle_names"],
+                         borrower["last_name"]]
 
-                borrower["name"] = name
+                # strings return false if they are empty or null,
+                # this lambda strips out those
+                names_list = list(filter(lambda name: bool(name), names))
+
+                # whats left gets joined together
+                full_borrower_name = ' '.join(names_list)
+                borrower["name"] = full_borrower_name
 
             set_name(borrower)
             borrower["token"] = Deed.generate_token()
