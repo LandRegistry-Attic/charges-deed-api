@@ -1,17 +1,19 @@
-
 ################################################################################
 ### This file contains the global variables for the various endpoints used   ###
 ### in acceptance tests, this abstracts the urls so that you will not        ###
 ### need to change every test when switching environments for example.       ###
 ################################################################################
 
+### These are the environment variables for accessing the various services
 class Env
   def self.borrower_frontend
-    (ENV['BORROWER_FRONTEND_URL'] || 'http://borrower-frontend.dev.service.gov.uk')
+    (ENV['BORROWER_FRONTEND_URL'] ||
+        'http://borrower-frontend.dev.service.gov.uk')
   end
 
   def self.conveyancer_frontend
-    (ENV['CONVEYANCER_FRONTEND_URL'] || 'http://conveyancer-frontend.dev.service.gov.uk')
+    (ENV['CONVEYANCER_FRONTEND_URL'] ||
+        'http://conveyancer-frontend.dev.service.gov.uk')
   end
 
   def self.deed_api

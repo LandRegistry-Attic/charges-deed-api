@@ -10,7 +10,7 @@ Before do
 end
 
 ### Code that is executed after acceptance tests for each feature have run
-After ('@delete_test_data') do
+After('@delete_test_data') do
   if @created_deed_id
     puts "Deleting test deed #{@created_deed_id}"
     delete_deed_data(@created_deed_id)
