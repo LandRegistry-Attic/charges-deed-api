@@ -1,0 +1,19 @@
+{
+    "id":"1",
+    "mdref": "MD0149A",
+    "case_id": "1" ,
+    "lender": {
+      "name": "Bank of England PLC",
+      "company-number": "2347672",
+      "address": {
+        "street-address": "12 Trinity Place",
+        "extended-address": "Regents Street",
+        "locality": "London",
+        "postal-code": "NW10 6TQ"
+      }
+    },
+    "restrictions": ["This is my restriction"],
+    "provisions": ["This Mortgage Deed incorporates the Lenders Mortgage Conditions and Explanation 2006, a copy of which has been received by the Borrower.",
+                  "The lender is under an obligation to make further advances and applies for the obligation to be entered in the register.",
+                  "No disposition of the registered estate by the proprietor of the registered estate is to be registered without a written consent signed by Bank of England Plc."]
+}

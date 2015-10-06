@@ -7,10 +7,14 @@ class DeedHelper:
     _id = randint(1, 999999)
     _json_doc = {
         "provisions": [],
+        "case_id": "1",
         "borrowers": [
             {
-                "id": "1",
+                "id": 1,
                 "name": "John Smith",
+                "first_name": "John",
+                "middle_names": "",
+                "last_name": "Smith",
                 "address": {
                     "street-address": "test street",
                     "postal-code": "RG1 1DP",

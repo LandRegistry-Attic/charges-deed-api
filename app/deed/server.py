@@ -44,16 +44,12 @@ def register_routes(blueprint, case_api):
         deed = Deed()
         deed_json = request.get_json()
 
-        for borrower in deed_json['borrowers']:
-            borrower["token"] = Deed.generate_token()
-
         json_doc = {
             "deed": {
                 "operative-deed": {
                     "mdref": deed_json['mdref'],
-                    "title": deed_json['title'],
                     "lender": deed_json['lender'],
-                    "borrowers": deed_json['borrowers'],
+                    "borrowers": [],
                     "charging-clause": "You, the borrower, with full title "
                                        "guarantee, charge property to the "
                                        "lender by way of legal mortgage with "
@@ -71,6 +67,41 @@ def register_routes(blueprint, case_api):
                 "signatures": []
             }
         }
+
+        borrowers = case_api.get_borrowers(deed_json['case_id']).json()
+
+        for borrower in borrowers:
+            def set_name(borrower):
+                names = [borrower["first_name"], borrower["middle_names"],
+                         borrower["last_name"]]
+
+                # strings return false if they are empty or null,
+                # this lambda strips out those
+                names_list = list(filter(lambda name: bool(name), names))
+
+                # whats left gets joined together
+                full_borrower_name = ' '.join(names_list)
+                borrower["name"] = full_borrower_name
+
+            set_name(borrower)
+            borrower["token"] = Deed.generate_token()
+            json_doc["deed"]["operative-deed"]["borrowers"].append(borrower)
+
+        def extract_title():
+            property_ = case_api.get_property(deed_json['case_id']).json()
+            return {
+                "title-number": property_['title_number'],
+                "address": {
+                    "street-address": property_['street'],
+                    "postal-code": property_['postcode'],
+                    "locality": property_['locality'],
+                    "extended-address": property_.get('extended')
+                }
+            }
+
+        title_json = extract_title()
+
+        json_doc["deed"]["operative-deed"]["title"] = title_json
 
         deed.json_doc = json_doc
         try:
