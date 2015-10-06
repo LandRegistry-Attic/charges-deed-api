@@ -110,8 +110,6 @@ def names_of_all_borrowers_signed(deed_id):
     deed = get(deed_id)
     signatures = deed.json_doc['deed']['signatures']
 
-    print (str(signatures))
-
     return [signature['borrower_name'] for signature in signatures]
 
 
