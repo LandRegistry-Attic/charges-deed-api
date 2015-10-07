@@ -1,6 +1,7 @@
 Given(/^I have created a case and deed with one borrower that is effective$/) do
   @created_case_id = create_case_data
 
+  puts Dir.pwd
   borrower_json = File.read('./features/data/one_borrower.json')
   @added_borrowers = add_borrowers_to_case(@created_case_id, borrower_json)
 
