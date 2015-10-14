@@ -63,7 +63,7 @@ python run.py db revision --autogenerate
 
 
 ## Current model
-
+```
 ### Deed
 
 {
@@ -143,7 +143,7 @@ python run.py db revision --autogenerate
     "registrars-signature": "THE_SIGNATURE",
     "date-effective": "2015-09-16 11:16:25.659042"
 }
-
+```
 ## Testing
 
 ### Unit tests
