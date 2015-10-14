@@ -21,6 +21,7 @@ GET     /deed/<id>/signed_status                    # check if all borrowers hav
                                                     # those who haven't
 POST    /deed/<deed_id>/<borrower_id>/signature/    # sign the mortgage deed
 POST    /deed/<deed_id>/completion                  # confirm mortgage deed completion (add registrars signature)
+```
 
 ## Getting started
 
