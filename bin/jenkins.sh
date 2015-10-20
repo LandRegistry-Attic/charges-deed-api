@@ -19,11 +19,11 @@ git submodule update --init
 
 rubocop=$?
 
-createdb -O tomcat $JOB_NAME
+createdb $JOB_NAME -h $ADDRESS -U $USERNAME
 
-DEED_DATABASE_URI=postgres:///$JOB_NAME coverage run --source=app --omit=../*migrations* tests.py --xml 
+DATABASE_URI=postgres://$USERNAME:$PGPASSWORD@$ADDRESS/$JOB_NAME coverage run --source=app --omit=../*migrations* tests.py --xml
 
-dropdb $JOB_NAME
+dropdb $JOB_NAME -h $ADDRESS -U $USERNAME
 
 test_pass=$?
 
