@@ -5,6 +5,7 @@ from xmlrunner import XMLTestRunner
 from colour_runner.runner import ColourTextTestRunner
 from os import path
 
+
 def thisDir():
     return path.dirname(path.realpath(__file__))
 
