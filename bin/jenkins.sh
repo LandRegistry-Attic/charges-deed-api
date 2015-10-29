@@ -22,6 +22,7 @@ rubocop=$?
 createdb $JOB_NAME -h $ADDRESS -U $USERNAME
 
 DATABASE_URI=postgres://$USERNAME:$PGPASSWORD@$ADDRESS/$JOB_NAME coverage run --source=app --omit=../*migrations* tests.py --xml
+echo DATABASE_URI
 
 dropdb $JOB_NAME -h $ADDRESS -U $USERNAME
 
